@@ -1,0 +1,2222 @@
+<!doctype html>
+<html lang="da" data-design="dashboard">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sikkerhedsoverblik</title>
+<style>
+:root{color-scheme:light;--ink:#172c29;--muted:#4e625d;--paper:#f4f7f4;--line:#dce6df;--green:#1e5949}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,sans-serif}button,input,textarea{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #438574;outline-offset:4px}[hidden]{display:none!important}
+header{background:#132f29;color:white}.top,main{width:100%;max-width:1680px;margin:auto;padding-inline:28px}.top{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:750;letter-spacing:.025em}.top small{color:#c7dfd4}
+main{padding-top:34px;padding-bottom:36px}.hero{background:linear-gradient(110deg,#1a4137,#286650);color:white;border-radius:23px;padding:30px 35px;margin-bottom:30px}.eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.15em;font-weight:750}.hero .eyebrow{color:#c4e5d6}.hero h1,h1{font-size:clamp(2rem,5vw,3rem);line-height:1.1;letter-spacing:-.045em;margin:8px 0 10px}.hero p{margin:0;color:#e0eee8}h2{font-size:1.22rem;margin:0 0 12px;letter-spacing:-.02em}.group+.group{margin-top:28px}.grid{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{width:100%;text-align:left;color:inherit;background:white;border:1px solid var(--line);border-radius:16px;padding:17px 18px;box-shadow:0 3px 12px #132f2908;display:grid;gap:8px}.card:hover{border-color:#578a78;background:#fcfefc}.card-top,.card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}.tag{background:#eaf3ee;color:#225646;border-radius:7px;padding:3px 8px;font-size:.72rem;font-weight:750}.arrow{color:var(--green);font-size:1.1rem}.name{font-weight:750;font-size:1.05rem}.status{font-size:1.35rem;font-weight:750;letter-spacing:-.035em}.status[data-tone=soon]{color:#805300}.status[data-tone=late]{color:#a13636}.status[data-tone=quiet]{color:var(--muted);font-size:1rem}.card-bottom{border-top:1px solid var(--line);padding-top:8px;color:var(--muted);font-size:.82rem;flex-wrap:wrap}.note-flag{color:var(--green);font-weight:650}
+.detail{max-width:780px;margin:auto}.back{background:none;border:0;color:var(--green);padding:0;margin-bottom:20px;font-weight:700}.detail h1{margin-bottom:12px}.panel{margin-top:22px;background:white;border:1px solid var(--line);border-radius:17px;padding:24px;display:grid;gap:12px}.panel h2,.panel p{margin:0}.muted,footer{color:var(--muted)}label{font-weight:700}input[type=date],textarea{display:block;width:100%;padding:10px 12px;color:inherit;background:#fbfdfb;border:1px solid #aebfb5;border-radius:8px}input[type=date]{max-width:245px}textarea{min-height:215px;resize:vertical}.primary,.download{display:inline-block;justify-self:start;background:var(--green);color:white;border:0;border-radius:8px;padding:9px 14px;text-decoration:none;font-weight:650}.file-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;overflow-wrap:anywhere}.feedback{min-height:1.5em;font-size:.9rem;color:var(--green)}.error{color:#a13636}footer{margin-top:26px;font-size:.83rem}
+@media(max-width:730px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:490px){.grid,.grid.two{grid-template-columns:1fr}.top,main{padding-inline:16px}.hero,.panel{padding:21px}.top small{display:none}}
+#employees-card{max-width:380px}.employee-form{gap:14px}.employee-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.employee-fields label{display:grid;gap:5px}.employee-fields input,.employee-fields select{width:100%;min-width:0;padding:9px 10px;font:inherit;color:inherit;border:1px solid #aebfb5;border-radius:8px;background:#fbfdfb}.employee-record{margin-top:12px;gap:10px}.employee-record h3{margin:0}.employee-check{display:flex;align-items:baseline;gap:9px;font-weight:500}.employee-check input{accent-color:var(--green)}.remove-employee:disabled{cursor:not-allowed;opacity:.55}.employee-summary{margin-top:24px}.employee-summary h2{margin-bottom:4px}
+@media(max-width:540px){.employee-fields{grid-template-columns:1fr}}
+.task-module{background:white;border:1px solid var(--line);border-radius:17px;padding:22px;margin-bottom:28px}
+.task-heading,.task-actions,.task-current,.task-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.task-heading{justify-content:space-between}.task-heading h2,.task-module h3{margin:0}
+.task-timer-hint{margin:8px 0 0;font-size:.85rem}.task-form{margin-top:12px}.task-form label{display:block;margin-bottom:5px}
+.task-form input{flex:1;min-width:175px}.task-form input,.task-form select{font:inherit;padding:9px 11px;color:inherit;border:1px solid #aebfb5;border-radius:8px;background:#fbfdfb}
+.task-secondary{background:white;color:var(--green);border:1px solid #aebfb5;border-radius:8px;padding:8px 12px;font-weight:650}
+.task-current{margin-top:13px;background:#e5f3eb;border-radius:10px;padding:12px;justify-content:space-between}
+.task-current output{font-weight:750;font-variant-numeric:tabular-nums;font-size:1.3rem}
+.task-row{justify-content:space-between;border-top:1px solid var(--line);padding:9px 0}
+.task-row strong,.task-current strong,.task-history-row summary{overflow-wrap:anywhere}
+.task-row .task-actions{margin-left:auto}.task-filter{margin-top:20px}.task-period-buttons{margin-top:12px}.task-period-buttons button:disabled{opacity:.55;cursor:not-allowed}
+.task-history-summary{background:#e5f3eb;padding:12px;border-radius:9px;font-weight:700}
+.task-history-row{margin:10px 0;background:white;border:1px solid var(--line);border-radius:10px;padding:12px}
+.task-history-row summary{cursor:pointer;font-weight:650}.task-history-row ul{padding-left:22px}
+
+/* Design comparison controls shared by the three themes. */
+:root {
+  --surface:#fff;
+  --field:#f7fafb;
+  --field-border:#adbcc7;
+  --soft:#eaf2f8;
+  --hover:#f7fbff;
+  --soon:#825400;
+  --late:#a22e41;
+  --button-text:#fff;
+}
+.design-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.design-options{display:flex;gap:5px;flex-wrap:wrap;padding:4px;background:var(--soft);border-radius:12px}
+.design-options button{padding:7px 13px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--ink);font-weight:650}
+.design-options button[aria-pressed=true]{background:var(--surface);border-color:var(--field-border)}
+.design-caption{margin:0;color:var(--muted);font-size:.87rem}
+.dashboard-group{min-width:0}
+.card,.panel,.task-module,.task-secondary,.task-history-row{background:var(--surface)}
+.card:hover{background:var(--hover);border-color:var(--green)}
+.task-current,.task-history-summary,.tag{background:var(--soft)}
+.tag{color:var(--green)}
+.primary,.download{color:var(--button-text)}
+.task-secondary{border-color:var(--field-border)}
+input[type=date],textarea,.task-form input,.task-form select,.employee-fields input,.employee-fields select{background:var(--field);border-color:var(--field-border)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline-color:var(--green)}
+.status[data-tone=soon]{color:var(--soon)}
+.status[data-tone=late],.error{color:var(--late)}
+.task-form input{max-width:100%}
+.task-module .feedback:empty{display:none}
+#today{text-align:right}
+
+/* Dashboard: bright, spacious cards and a prominent work panel. */
+:root[data-design=dashboard] {
+  --ink:#142841;--muted:#486078;--paper:#eef4fa;--line:#d4e2ee;--green:#165496;
+}
+[data-design=dashboard] header{background:#142841}
+[data-design=dashboard] .top small{color:#cee3fb}
+[data-design=dashboard] .hero{background:radial-gradient(ellipse at 87% 0%,#327cc5,transparent 55%),#163e70;padding:34px clamp(21px,4vw,40px)}
+[data-design=dashboard] .hero p,[data-design=dashboard] .hero .eyebrow{color:#dbecff}
+[data-design=dashboard] .card{border-top:3px solid #79a9d9;box-shadow:0 8px 22px #244d7910}
+[data-design=dashboard] .task-module{box-shadow:0 8px 24px #244d7912}
+[data-design=dashboard] .dashboard-group h2{border-left:3px solid #4681be;padding-left:9px}
+
+/* Driftstavle: dark, compact rows with work and countdowns side by side. */
+:root[data-design=operations] {
+  color-scheme:dark;
+  --ink:#f1f5f7;--muted:#b3c4d0;--paper:#101820;--line:#3a4e5d;--green:#9de5da;
+  --surface:#1b2934;--field:#14212a;--field-border:#627b8c;--soft:#243b47;
+  --hover:#233743;--soon:#ffd085;--late:#ffadb7;--button-text:#102821;
+}
+[data-design=operations] header{background:#0b1219;border-bottom:1px solid var(--line)}
+[data-design=operations] .top small{color:var(--muted)}
+[data-design=operations] .hero{padding:18px 0;margin:0 0 16px;border-bottom:1px solid var(--line);border-radius:0;background:none;color:var(--ink)}
+[data-design=operations] .hero .eyebrow,[data-design=operations] .hero p{color:var(--muted)}
+[data-design=operations] .status,[data-design=operations] output{font-family:ui-monospace,Consolas,monospace;letter-spacing:-.04em}
+[data-design=operations] .dashboard-group .grid{grid-template-columns:1fr;gap:7px}
+[data-design=operations] .dashboard-group h2{font-size:.87rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+[data-design=operations] .dashboard-group+.dashboard-group{margin-top:16px}
+[data-design=operations] .card{grid-template-columns:4.2rem minmax(0,1fr) auto;column-gap:9px;row-gap:4px;align-items:center;padding:9px 11px;border-radius:7px;box-shadow:none}
+[data-design=operations] .card .status{font-size:.92rem;text-align:right}
+[data-design=operations] .card-bottom{grid-column:2/-1;padding-top:3px}
+[data-design=operations] #employees-card{max-width:none}
+[data-design=operations] .task-module{border-radius:9px}
+@media(min-width:940px){
+  [data-design=operations] #home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:0 22px;align-items:start}
+  [data-design=operations] .hero{grid-column:1/-1}
+  [data-design=operations] .task-module{grid-column:1;grid-row:2/span 4;margin:0}
+  [data-design=operations] .dashboard-group{grid-column:2;margin-top:0}
+}
+@media(max-width:490px){
+  [data-design=operations] .card{grid-template-columns:3.6rem minmax(0,1fr)}
+  [data-design=operations] .card .status{grid-column:2;text-align:left}
+}
+
+/* Arbejdsmappe: warm paper, serif headings and notebook-style sections. */
+:root[data-design=notebook] {
+  --ink:#30241e;--muted:#635245;--paper:#f8f2e8;--line:#dfcfc1;--green:#813d2c;
+  --surface:#fffaf2;--field:#fffdf8;--field-border:#bda99a;--soft:#f0e2d3;
+  --hover:#f9ebdf;--soon:#805200;--late:#a02636;
+}
+[data-design=notebook] main{max-width:1680px}
+[data-design=notebook] header{background:var(--surface);color:var(--ink);border-bottom:1px solid var(--line)}
+[data-design=notebook] .top small{color:var(--muted)}
+[data-design=notebook] h1,[data-design=notebook] h2,[data-design=notebook] .brand{font-family:Georgia,serif;letter-spacing:-.02em}
+[data-design=notebook] .hero{background:none;color:var(--ink);border:0;border-bottom:3px double var(--field-border);border-radius:0;padding:11px 0 22px;margin-bottom:22px}
+[data-design=notebook] .hero h1{font-size:clamp(2.3rem,6vw,4rem)}
+[data-design=notebook] .hero p,[data-design=notebook] .hero .eyebrow{color:var(--muted)}
+[data-design=notebook] .task-module{border-left:4px solid var(--green);border-radius:3px 12px 12px 3px}
+[data-design=notebook] .dashboard-group h2{display:flex;align-items:center;gap:10px;font-size:1.42rem}
+[data-design=notebook] .dashboard-group h2::after{content:"";height:1px;background:var(--line);flex:1}
+[data-design=notebook] .card{border-radius:4px;box-shadow:none}
+[data-design=notebook] .card-top{flex-direction:row-reverse}
+[data-design=notebook] .card-bottom{border-top-style:dashed}
+
+/* Avis */
+:root[data-design=newspaper] {
+  --ink:#231e18;--muted:#514738;--paper:#f6efde;--line:#9c8d76;--green:#85232a;
+  --surface:#fff9eb;--field:#fffaf0;--field-border:#a99a83;--soft:#efe2ca;
+  --hover:#f1e3c8;--soon:#774a08;--late:#85232a;
+}
+[data-design=newspaper] header{background:#2b231c;color:#fff4db}
+[data-design=newspaper] .top small{color:#f4d9a9}
+[data-design=newspaper] h1,[data-design=newspaper] h2,[data-design=newspaper] .name{font-family:Georgia,serif}
+[data-design=newspaper] .hero{background:none;color:var(--ink);text-align:center;border-block:5px double var(--ink);border-radius:0;padding:22px 8px}
+[data-design=newspaper] .hero h1{font-size:clamp(2rem,7.1vw,5.8rem);font-weight:900;margin:3px 0 8px}
+[data-design=newspaper] .hero .eyebrow{color:var(--green)}
+[data-design=newspaper] .hero p{color:var(--muted);font-family:Georgia,serif;font-style:italic}
+[data-design=newspaper] .dashboard-group h2{border-top:3px solid var(--ink);padding-top:7px}
+[data-design=newspaper] .card,[data-design=newspaper] .task-module{border-radius:0;box-shadow:none}
+[data-design=newspaper] .card .name{font-size:1.3rem}
+[data-design=newspaper] .tag{border-radius:0;text-transform:uppercase}
+[data-design=newspaper] #employees-card{max-width:none}
+@media(min-width:900px){
+  [data-design=newspaper] #home{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:20px;align-items:start}
+  [data-design=newspaper] .hero,[data-design=newspaper] .task-module,[data-design=newspaper] .dashboard-group:last-child{grid-column:1/-1}
+  [data-design=newspaper] .dashboard-group{margin-top:0}
+  [data-design=newspaper] .dashboard-group:last-child{margin-top:22px}
+  [data-design=newspaper] .dashboard-group .grid{grid-template-columns:1fr;gap:8px}
+}
+
+/* Steampunk */
+:root[data-design=steampunk] {
+  color-scheme:dark;
+  --ink:#fff0cc;--muted:#e3c7a2;--paper:#211711;--line:#8b603d;--green:#ffcc76;
+  --surface:#36231a;--field:#271b15;--field-border:#a1734e;--soft:#4b3021;
+  --hover:#513326;--soon:#ffe297;--late:#ffb5ac;--button-text:#2a1b12;
+}
+[data-design=steampunk] body{background:repeating-linear-gradient(120deg,#ffffff03 0 1px,transparent 1px 8px),var(--paper)}
+[data-design=steampunk] header{background:#20150e;border-bottom:4px ridge #a87944}
+[data-design=steampunk] .top small{color:var(--muted)}
+[data-design=steampunk] h1,[data-design=steampunk] h2,[data-design=steampunk] .brand{font-family:Georgia,serif}
+[data-design=steampunk] .hero{background:radial-gradient(ellipse at 85% 0%,#704422,transparent 67%),#35231a;color:var(--ink);border:5px ridge #ac7845;border-radius:30px 8px;position:relative;padding-right:clamp(22px,12vw,140px)}
+[data-design=steampunk] .hero::after{content:"";position:absolute;right:18px;bottom:18px;width:clamp(16px,7vw,76px);aspect-ratio:1;border:3px solid #c78d54;border-radius:50%;background:conic-gradient(from 35deg,#f6b968 0 1%,transparent 1% 98%,#f6b968 98%),repeating-conic-gradient(#c78d54 0deg 2deg,transparent 2deg 30deg);box-shadow:inset 0 0 0 5px #35231a;pointer-events:none}
+[data-design=steampunk] .hero p,[data-design=steampunk] .hero .eyebrow{color:var(--muted)}
+[data-design=steampunk] .card,[data-design=steampunk] .task-module{border:3px double var(--line);border-radius:20px 4px;box-shadow:inset 0 0 0 2px #1d130e}
+[data-design=steampunk] .card .status,[data-design=steampunk] output{font-family:Consolas,monospace}
+[data-design=steampunk] .tag{border:1px solid var(--line);border-radius:999px}
+[data-design=steampunk] .primary{background:linear-gradient(#ffda93,#e6a451);box-shadow:inset 0 0 0 1px #976435}
+@media(max-width:490px){[data-design=steampunk] .hero::after{display:none}}
+
+/* Funky */
+:root[data-design=funky] {
+  --ink:#241639;--muted:#51396d;--paper:#f9efff;--line:#3b2150;--green:#542097;
+  --surface:#fffafd;--field:#fff;--field-border:#77579c;--soft:#ebdcff;
+  --hover:#f9d7f1;--soon:#6b3d00;--late:#9b2154;
+}
+[data-design=funky] header{background:#2b1743;border-bottom:4px solid #e59eff}
+[data-design=funky] .top small{color:#f3daff}
+[data-design=funky] .hero{background:linear-gradient(115deg,#f9ceff,#ffc78b 58%,#f5f49a);color:var(--ink);border:2px solid var(--line);border-radius:42px 13px;box-shadow:5px 5px 0 var(--line);position:relative;overflow:hidden}
+[data-design=funky] .hero>*{position:relative;z-index:1}
+[data-design=funky] .hero h1{font-weight:950;font-size:clamp(2.2rem,6.5vw,5rem)}
+[data-design=funky] .hero p,[data-design=funky] .hero .eyebrow{color:var(--ink)}
+[data-design=funky] .hero::after{content:"";position:absolute;right:-35px;top:-72px;width:210px;aspect-ratio:1;border-radius:50%;background:repeating-radial-gradient(circle,#7b389537 0 3px,transparent 4px 13px);pointer-events:none}
+[data-design=funky] .task-module,[data-design=funky] .card{border:2px solid var(--line);box-shadow:4px 4px 0 var(--line)}
+[data-design=funky] .card{border-radius:24px 9px;background:#f7e3ff}
+[data-design=funky] .card:nth-child(2n){background:#dcf9e2;border-radius:9px 24px}
+[data-design=funky] .card:nth-child(3n){background:#ffe4b8}
+[data-design=funky] .card:hover{background:var(--hover)}
+[data-design=funky] .dashboard-group .grid{gap:17px}
+[data-design=funky] .dashboard-group h2{display:table;background:#ffcbe9;border:1px solid var(--line);border-radius:30px;padding:3px 13px}
+[data-design=funky] .tag,[data-design=funky] .primary,[data-design=funky] .task-secondary{border-radius:999px}
+[data-design=funky] .status{font-weight:900}
+
+.orders-module{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:26px;min-width:0}
+.orders-form{margin-top:14px}.orders-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.orders-form label{display:grid;gap:5px}.orders-form input{width:100%;min-width:0;padding:9px 10px;font:inherit;color:inherit;background:var(--field);border:1px solid var(--field-border);border-radius:8px}
+.orders-form textarea{min-height:65px;margin-bottom:12px}.order-note{white-space:pre-wrap;overflow-wrap:anywhere}
+.order-row summary{font-size:1rem}.order-status{font-weight:700}
+[data-design=operations] .orders-module,[data-design=newspaper] .orders-module{grid-column:1/-1}
+[data-design=steampunk] .orders-module{border:3px double var(--line);border-radius:20px 4px}
+[data-design=funky] .orders-module{border:2px solid var(--line);box-shadow:4px 4px 0 var(--line)}
+[data-design=newspaper] .orders-module{border-radius:0}
+@media(max-width:540px){.orders-fields{grid-template-columns:1fr}}
+
+.mind-board{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:26px;min-width:0}
+.mind-board .task-heading{margin-bottom:12px}.mind-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0}
+.mind-card strong{overflow-wrap:anywhere;font-size:1.1rem}.mind-select{display:flex;align-items:center;gap:8px;font-size:.9rem;font-weight:500;margin-top:8px}.mind-select input{accent-color:var(--green);width:18px;height:18px}
+[data-design=operations] .mind-board,[data-design=newspaper] .mind-board{grid-column:1/-1}
+[data-design=steampunk] .mind-board{border:3px double var(--line)}
+[data-design=funky] .mind-board{border:2px solid var(--line);box-shadow:4px 4px 0 var(--line)}
+[data-design=newspaper] .mind-board,[data-design=newspaper] .mind-card{border-radius:0}
+
+.attention-board{padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--green);border-radius:10px;margin-bottom:22px;grid-column:1/-1}
+#attention-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+#attention-list li{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#attention-list span{color:var(--muted);font-size:.9rem}
+[data-design=operations] .hero{grid-row:2}
+[data-design=operations] .task-module{grid-row:3/span 4}
+#task-details-form input,#task-details-form select,.time-edit-row input{font:inherit;background:var(--field);color:var(--ink);border:1px solid var(--field-border);border-radius:7px;padding:9px;width:100%;min-width:0}
+.task-note-preview{white-space:pre-wrap;overflow-wrap:anywhere;max-width:650px;font-size:.9rem;color:var(--muted)}
+.time-edit-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;align-items:end;margin-bottom:12px}
+.time-edit-row label{display:grid;gap:5px}
+.table-scroll{overflow:auto}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}
+.backup-panel{margin-top:30px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted)}
+.backup-panel summary{cursor:pointer;font-weight:650}
+@media(max-width:650px){.time-edit-row{grid-template-columns:1fr}.attention-board{padding:15px}}
+input[type=search],#checklist-text{font:inherit;padding:9px 12px;background:var(--field);color:var(--ink);border:1px solid var(--field-border);border-radius:8px;width:100%;margin:8px 0}
+.checklist-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.checklist-row label{display:flex;gap:10px;align-items:center;overflow-wrap:anywhere}.checklist-row input{accent-color:var(--green)}
+#day-end h2{margin-top:24px}#day-end-open li{margin-bottom:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+
+.folder-panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:22px}
+.folder-panel p{margin:8px 0}.folder-help{font-size:.84rem}
+#folder-existing{margin-top:14px;padding-top:10px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header><div class="top"><span class="brand">Sikkerhedsoverblik</span><small id="today"></small></div></header>
+<main>
+<section class="folder-panel" aria-labelledby="folder-heading">
+<div class="task-heading"><strong id="folder-heading">Lokal datamappe</strong><span id="folder-badge" class="tag">Ingen mappe valgt</span></div>
+<p id="folder-status" role="status">Vælg en lokal mappe på arbejds-pc’en for at gemme dine oplysninger og vedhæftninger dér.</p>
+<div class="task-actions">
+<button type="button" class="primary" id="folder-pick">Vælg datamappe</button>
+<button type="button" class="task-secondary" id="folder-save" disabled>Gem nu</button>
+<button type="button" class="task-secondary" id="folder-reconnect" hidden>Giv adgang igen</button>
+<button type="button" class="task-secondary" id="folder-disconnect" hidden>Afbryd mappe</button>
+</div>
+<p class="muted folder-help">Oplysningerne sendes ikke til en server. Vælg en mappe uden OneDrive eller anden cloudsynkronisering. Browseren beholder en lokal arbejdskopi.</p>
+<div id="folder-existing" hidden>
+<p id="folder-existing-info"></p>
+<p class="muted">Indlæsning erstatter arbejdskopien i denne browser. Hent eventuelt en sikkerhedskopi nederst først.</p>
+<button type="button" class="primary" id="folder-load">Indlæs oplysninger fra mappen</button>
+<button type="button" class="task-secondary" id="folder-cancel">Annullér mappevalg</button>
+</div>
+</section>
+
+<div class="design-bar">
+<div class="design-options" role="group" aria-label="Vælg design">
+<button type="button" data-design-option="dashboard" aria-pressed="true">1. Dashboard</button>
+<button type="button" data-design-option="operations" aria-pressed="false">2. Driftstavle</button>
+<button type="button" data-design-option="notebook" aria-pressed="false">3. Arbejdsmappe</button>
+<button type="button" data-design-option="newspaper" aria-pressed="false">4. Avis</button>
+<button type="button" data-design-option="steampunk" aria-pressed="false">5. Steampunk</button>
+<button type="button" data-design-option="funky" aria-pressed="false">6. Funky</button>
+</div>
+<p class="design-caption" id="design-caption">Lyse kort med tydelige nedtællinger.</p>
+</div>
+<section id="home">
+<section class="attention-board" aria-labelledby="attention-title">
+<div class="task-heading"><h2 id="attention-title">Kræver handling</h2><span class="tag" id="attention-count">0</span></div>
+<p class="muted" id="attention-empty">Ingen aktuelle opfølgninger. Angiv forberedelsesdatoer og opfølgningsdatoer, når du planlægger.</p>
+<ul id="attention-list"></ul>
+</section>
+<div class="hero"><div class="eyebrow">Mit arbejdsrum</div><h1>Dit sikkerhedsoverblik</h1><p>Se hvad der nærmer sig, og saml dine emner til næste gang.</p></div>
+<section class="group task-module" aria-labelledby="tasks-title">
+<div class="task-heading"><div><div class="eyebrow muted">Tidsregistrering</div><h2 id="tasks-title">Mit arbejde</h2></div>
+<div class="task-actions">
+<button type="button" class="task-secondary" id="show-open-tasks">Åbne opgaver (0)</button>
+<button type="button" class="task-secondary" id="show-day-end">Dagens afslutning</button>
+<button type="button" class="task-secondary" id="open-task-history">Se opgavehistorik</button>
+</div></div>
+<form id="quick-task" class="task-form">
+<label for="task-name">Ny opgave</label>
+<div class="task-actions">
+<input id="task-name" name="title" required maxlength="200" placeholder="Skriv en opgave eller vælg fra listen">
+<select id="task-preset" aria-label="Vælg en ofte brugt opgave">
+<option value="">Vælg en fast opgave</option>
+<option>Møde</option>
+<option>Hjælp medarbejder</option>
+<option>Intro til ny medarbejder</option>
+<option>PPE</option>
+<option>eROPEX</option>
+<option>APV</option>
+<option>Oobeya-møde + 6S</option>
+</select>
+<button class="primary" type="submit">Opret og start timer</button>
+</div>
+</form>
+<p class="muted task-timer-hint">Én timer ad gangen. Start af en anden opgave stopper den nuværende timer. Timeren kører videre, hvis du lukker siden, mens den er aktiv.</p>
+<div class="task-current" id="task-current" hidden>
+<div><div class="eyebrow">Timer kører</div><strong id="running-task-name"></strong></div>
+<output id="running-clock" aria-label="Samlet tid på opgaven"></output>
+<button type="button" class="task-secondary" id="stop-task">Stop timer</button>
+</div>
+<div role="status" id="task-feedback" class="feedback"></div>
+</section>
+
+<section class="group mind-board" aria-labelledby="mind-title">
+<div class="task-heading"><h2 id="mind-title">Top of mind</h2><span class="tag" id="mind-count">0 opgaver</span></div>
+<p class="muted" id="mind-empty">Vælg opgaver med flueben under Åbne opgaver, så vises de her.</p>
+<div class="grid" id="mind-list"></div>
+</section>
+<section class="group dashboard-group"><h2>Møder</h2><div class="grid" id="meetings"></div></section>
+<section class="group dashboard-group"><h2>Kommunikation</h2><div class="grid two" id="communication"></div></section>
+<section class="group dashboard-group"><h2>Kontrol og ture</h2><div class="grid two" id="controls"></div></section>
+<section class="group dashboard-group"><h2>Introduktion</h2>
+<button type="button" class="card" id="employees-card">
+<span class="card-top"><span class="tag">INTRO</span><span class="arrow" aria-hidden="true">↗</span></span>
+<span class="name">Nye medarbejdere</span>
+<span class="status" id="employee-count">0 nye medarbejdere</span>
+<span class="card-bottom">Åbn introduktionsoversigten</span>
+</button>
+</section>
+<section class="group orders-module" aria-labelledby="orders-title">
+<div class="task-heading"><div><div class="eyebrow muted">Husk at følge op</div><h2 id="orders-title" tabindex="-1">Bestillinger</h2></div><span id="orders-count" class="tag">0 åbne</span></div>
+<form id="order-form" class="orders-form">
+<div class="orders-fields">
+<label>Bestilt af<input name="person" required maxlength="160" placeholder="Medarbejderens navn"></label>
+<label>Hvad er bestilt?<input name="item" required maxlength="300" placeholder="Fx sikkerhedssko, str. 44"></label>
+<label>Bestillingsdato<input type="date" name="ordered" required></label>
+<label>Forventet levering<input type="date" name="expected"></label>
+</div>
+<label>Noter<textarea name="note" placeholder="Fx størrelse, leverandør eller ordrenummer"></textarea></label>
+<button class="primary" type="submit" id="order-save">Gem bestilling</button>
+<button class="task-secondary" type="button" id="order-cancel" hidden>Annullér redigering</button>
+</form>
+<div id="order-feedback" role="status" class="feedback"></div>
+<p class="muted" id="orders-empty">Ingen åbne bestillinger.</p>
+<div id="orders-list"></div>
+</section>
+</section>
+<section class="detail" id="detail" hidden>
+<button type="button" class="back" id="back">← Tilbage til overblikket</button>
+<div class="eyebrow muted" id="category"></div><h1 id="title" tabindex="-1"></h1>
+<div class="status" id="countdown"></div>
+<div class="panel" id="editor">
+<label for="date" id="date-label"></label>
+<input type="date" id="date">
+<label for="prepare-date">Start forberedelse</label>
+<input type="date" id="prepare-date">
+<p class="muted">Fra denne dato vises emnet under Kræver handling. Flyt datoerne frem efter mødet.</p>
+<label for="note" id="note-label"></label>
+<textarea id="note" placeholder="Skriv et emne, du vil huske …"></textarea>
+<div role="status" class="feedback" id="saved"></div>
+</div>
+<div class="panel" id="attachment" hidden>
+<h2>Stigeoversigt i Excel</h2>
+<p class="muted">Vedhæft et regneark med fabrikkens stiger. Du kan hente den gemte kopi igen her.</p>
+<label for="excel" class="primary" id="choose" tabindex="0">Vælg Excel-fil</label>
+<input type="file" id="excel" accept=".xlsx,.xls,.xlsm,.xlsb" hidden>
+<div class="file-row"><span id="filename">Ingen fil vedhæftet</span><a id="download" class="download" hidden>Hent Excel-fil</a></div>
+<div role="status" class="feedback" id="file-feedback"></div>
+</div>
+</section>
+<section class="detail" id="employees" hidden>
+<button type="button" class="back" id="employees-back">← Tilbage til overblikket</button>
+<div class="eyebrow muted">Introduktion</div>
+<h1 id="employees-title" tabindex="-1">Nye medarbejdere</h1>
+<form class="panel employee-form" id="employee-form">
+<h2>Tilføj ny medarbejder</h2>
+<div class="employee-fields">
+<label>Medarbejderens navn<input id="employee-name" name="name" required></label>
+<label>Afdeling
+<select id="employee-department" name="department" required>
+<option value="">Vælg afdeling</option>
+<option>Hold 10</option><option>Hold 11</option><option>Hold 12</option>
+<option>Konf.</option><option>Lager</option><option>Ude område</option>
+<option>Intern service</option><option>Vedligehold el</option><option>Vedligehold smed</option>
+</select>
+</label>
+<label>Medarbejderens AMR<input name="amr" required></label>
+</div>
+<button type="submit" class="primary">Tilføj medarbejder</button>
+</form>
+<div class="employee-summary">
+<h2>Medarbejdere på listen</h2>
+<p class="muted" id="employee-help">Sæt begge flueben for at kunne fjerne medarbejderen.</p>
+<div id="employee-list"></div>
+<p class="muted" id="employee-empty">Der er ingen nye medarbejdere på listen.</p>
+</div>
+<div role="status" class="feedback" id="employee-feedback"></div>
+</section>
+<template id="employee-template">
+<article class="panel employee-record">
+<h3></h3>
+<p class="muted"></p>
+<label class="employee-check"><input type="checkbox" name="video">Medarbejderen har set sikkerhedsvideoen</label>
+<label class="employee-check"><input type="checkbox" name="tour">Medarbejderen er blevet vist rundt af AMR</label>
+<button type="button" class="primary remove-employee" aria-describedby="employee-help">Fjern medarbejder</button>
+</article>
+</template>
+<section class="detail" id="open-task-view" hidden>
+<button type="button" class="back" id="close-open-tasks">← Tilbage til overblikket</button>
+<div class="eyebrow muted">Tidsregistrering</div>
+<h1 id="open-tasks-title" tabindex="-1">Åbne opgaver</h1>
+<div role="status" id="open-task-feedback" class="feedback"></div>
+<p class="muted" id="open-tasks-empty">Du har ingen åbne opgaver.</p>
+<label for="open-task-search">Søg i åbne opgaver</label><input type="search" id="open-task-search" placeholder="Opgavenavn eller noter">
+<p id="open-search-count" class="muted"></p><div id="open-tasks"></div>
+</section>
+<section class="detail" id="task-history" hidden>
+<button type="button" class="back" id="close-task-history">← Tilbage til overblikket</button>
+<div class="eyebrow muted">Tidsregistrering</div>
+<h1 id="task-history-title" tabindex="-1">Opgavehistorik</h1>
+<p class="muted">Oversigten medtager opgaver, der er oprettet, afsluttet eller arbejdet på i perioden. Kun tid registreret i perioden tæller med i summen.</p>
+<form id="task-period-form" class="task-filter">
+<div class="task-actions">
+<label for="task-period-start">Startdato</label>
+<input type="date" id="task-period-start" required>
+<label for="task-period-end">Slutdato</label>
+<input type="date" id="task-period-end" required>
+</div>
+<div class="task-actions task-period-buttons">
+<button type="submit" class="primary">Generér oversigt</button>
+<button type="button" class="task-secondary" id="clear-task-period">Vis alle dage</button>
+<button type="button" class="task-secondary" id="export-task-period" disabled>Eksportér til Excel (CSV)</button>
+</div>
+</form>
+<p id="task-history-summary" class="task-history-summary"></p>
+<div role="status" id="task-history-feedback" class="feedback"></div>
+<section class="panel"><h2>Tid pr. opgavetype</h2>
+<p class="muted">Bruger den valgte periode ovenfor. Vælg fx månedens første og sidste dag.</p>
+<div class="table-scroll"><table><thead><tr><th>Opgavetype</th><th>Tid</th><th>Andel</th></tr></thead><tbody id="category-report-body"></tbody></table></div>
+<p id="category-report-empty" class="muted">Ingen registreret tid.</p>
+<button type="button" class="task-secondary" id="export-categories">Eksportér opgavetyper (CSV)</button></section>
+<label for="history-task-search">Søg i opgavehistorik</label><input type="search" id="history-task-search" placeholder="Opgavenavn eller noter"><div id="task-history-list"></div>
+</section>
+<section class="detail" id="task-editor" hidden>
+<button type="button" class="back" id="task-editor-back">← Tilbage</button>
+<h1 id="task-editor-title" tabindex="-1">Opgavedetaljer</h1>
+<form class="panel" id="task-details-form">
+<label for="task-edit-title">Opgavenavn</label><input id="task-edit-title" required maxlength="200">
+<label for="task-edit-category">Opgavetype</label><select id="task-edit-category"></select>
+<label for="task-edit-state">Status</label>
+<select id="task-edit-state"><option value="open">Åben</option><option value="waiting">Afventer andre</option></select>
+<label for="task-edit-who">Afventer hvem?</label><input id="task-edit-who" maxlength="200" placeholder="Fx indkøb eller leverandør">
+<label for="task-edit-followup">Opfølgningsdato</label><input type="date" id="task-edit-followup">
+<label for="task-edit-deadline">Deadline</label><input type="date" id="task-edit-deadline">
+<label for="task-edit-repeat">Gentagelse efter fuldførelse</label>
+<select id="task-edit-repeat"><option value="">Ingen</option><option value="weekly">Ugentligt</option><option value="monthly">Månedligt</option><option value="yearly">Årligt</option></select>
+<p class="muted">Næste frist beregnes fra denne opgaves deadline eller fra afslutningsdatoen, hvis den ingen deadline har. Den nye opgave får en nulstillet tjekliste.</p>
+<label for="task-edit-note">Noter og næste skridt</label><textarea id="task-edit-note"></textarea>
+<button type="submit" class="primary">Gem opgavedetaljer</button>
+</form>
+<section class="panel"><h2>Tjekliste</h2><div id="task-checklist"></div>
+<label for="checklist-text">Nyt trin</label><input id="checklist-text" maxlength="300" placeholder="Fx gennemgå med AMG">
+<button type="button" class="task-secondary" id="checklist-add">Tilføj trin</button></section>
+<section class="panel" aria-labelledby="time-editor-heading">
+<h2 id="time-editor-heading">Ret registreret tid</h2>
+<p class="muted">Indtast den samlede tid, du brugte på opgaven den pågældende dag. Fx 1 time og 30 minutter. Sæt begge felter til 0 for at nulstille tiden den dag.</p>
+<button type="button" class="task-secondary" id="time-stop-active" hidden>Stop timer og ret tiden</button>
+<form id="time-edit-form">
+<div id="time-edit-rows"></div>
+<div class="task-actions"><button type="button" class="task-secondary" id="time-add-row">Tilføj en dato</button><button type="submit" class="primary">Gem dagens tider</button></div>
+</form>
+</section>
+<div role="status" class="feedback" id="task-edit-feedback"></div>
+</section>
+<section class="detail" id="day-end" hidden>
+<button type="button" class="back" id="close-day-end">← Tilbage til overblikket</button>
+<h1 id="day-end-title" tabindex="-1">Dagens afslutning</h1>
+<p id="day-end-total" class="task-history-summary"></p>
+<p id="day-end-running"></p><button type="button" class="task-secondary" id="day-end-stop">Stop aktiv timer</button>
+<h2>Dagens arbejde</h2><p id="day-end-empty" class="muted">Ingen registreret tid i dag.</p><ul id="day-end-list"></ul>
+<h2>Åbne opgaver og næste skridt</h2><ul id="day-end-open"></ul>
+</section>
+<section class="backup-panel">
+<details><summary>Sikkerhedskopi og gendannelse</summary>
+<p>Hent alle oplysninger inklusive Excel-vedhæftningen. Kopien kan indlæses på en anden pc eller ved en ny filplacering.</p>
+<div class="task-actions"><button type="button" class="task-secondary" id="backup-export">Hent sikkerhedskopi</button>
+<label class="task-secondary" for="backup-file">Vælg sikkerhedskopi til gendannelse</label><input type="file" id="backup-file" accept=".json" hidden>
+<button type="button" class="primary" id="backup-restore" hidden>Erstat oplysninger med sikkerhedskopien</button></div>
+<div id="backup-feedback" class="feedback" role="status"></div>
+</details></section>
+<footer>Dine oplysninger gemmes lokalt. Gemmestatus øverst viser, om de også er skrevet til den valgte mappe.</footer>
+</main>
+<script>
+'use strict';
+const entries = [
+  {id:'amo', name:'AMO møde', group:'meetings', label:'Møde', tag:'AMO'},
+  {id:'amr', name:'AMR møde', group:'meetings', label:'Møde', tag:'AMR'},
+  {id:'amu', name:'AMU møde', group:'meetings', label:'Møde', tag:'AMU'},
+  {id:'newsletter', name:'Nyhedsbrevet', group:'communication', label:'Kommunikation', tag:'NYH'},
+  {id:'uldtotten', name:'Uldtotten', group:'communication', label:'Kommunikation', tag:'ULD'},
+  {id:'ladders', name:'Stige kontrol', group:'controls', label:'Kontrol og ture', tag:'STI'},
+  {id:'straps', name:'Stroppetur', group:'controls', label:'Kontrol og ture', tag:'STR'}
+];
+const $ = id => document.getElementById(id);
+const storageKey = 'sikkerhedsoverblik-v1';
+let data = {};
+let storageError = false;
+try { data = JSON.parse(localStorage.getItem(storageKey) || '{}') || {}; }
+catch { storageError = true; }
+let active;
+let fileUrl;
+let attachedFile;
+let busy = false;
+const dateFormat = new Intl.DateTimeFormat('da-DK',{day:'numeric',month:'long',year:'numeric'});
+const fullDate = new Intl.DateTimeFormat('da-DK',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+function timing(value, now = new Date()) {
+  if (!value) return {text:'Ingen dato sat', tone:'quiet', date:'Tilføj en dato'};
+  const [year, month, day] = value.split('-').map(Number);
+  const days = (Date.UTC(year,month-1,day) - Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())) / 86400000;
+  const amount = Math.abs(days);
+  const period = amount === 1 ? 'dag' : 'dage';
+  const date = dateFormat.format(new Date(year,month-1,day));
+  if (days < 0) return {text:amount+' '+period+' siden', tone:'late', date};
+  if (days === 0) return {text:'I dag', tone:'soon', date};
+  return {text:'Om '+days+' '+period, tone:days <= 7 ? 'soon' : 'normal', date};
+}
+function renderHome() {
+  if (enhancementsReady) renderAttention();
+  $('today').textContent = fullDate.format(new Date());
+  for (const group of ['meetings','communication','controls']) $(group).replaceChildren();
+  for (const item of entries) {
+    const record = data[item.id] || {};
+    const time = timing(record.date);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'card';
+    button.id = 'card-' + item.id;
+    button.innerHTML = '<span class="card-top"><span class="tag"></span><span class="arrow" aria-hidden="true">↗</span></span><span class="name"></span><span class="status"></span><span class="card-bottom"><span></span><span class="note-flag"></span></span>';
+    button.querySelector('.tag').textContent = item.tag;
+    button.querySelector('.name').textContent = item.name;
+    const status = button.querySelector('.status');
+    status.textContent = time.text;
+    status.dataset.tone = time.tone;
+    button.querySelector('.card-bottom span').textContent = time.date;
+    button.querySelector('.note-flag').textContent = item.id === 'ladders' && attachedFile ? 'Excel vedhæftet' : record.note?.trim() ? 'Notat gemt' : 'Åbn';
+    button.addEventListener('click', () => openDetail(item));
+    $(item.group).append(button);
+  }
+}
+function refreshCountdown() {
+  const time = timing($('date').value);
+  $('countdown').textContent = time.text;
+  $('countdown').dataset.tone = time.tone;
+}
+function report(id, message, error = false) {
+  $(id).textContent = message;
+  $(id).classList.toggle('error',error);
+}
+function openDetail(item) {
+  active = item;
+  const record = data[item.id] || {};
+  $('home').hidden = true;
+  $('detail').hidden = false;
+  $('category').textContent = item.label;
+  $('title').textContent = item.name;
+  $('date-label').textContent = item.group === 'meetings' ? 'Dato for næste møde' : item.group === 'communication' ? 'Næste frist eller udgivelsesdato' : 'Dato for næste kontrol eller tur';
+  $('note-label').textContent = item.group === 'meetings' ? 'Emner til næste møde' : item.group === 'communication' ? 'Emner til næste udgivelse' : 'Noter til næste gang';
+  $('date').value = record.date || '';
+  $('prepare-date').value = record.prepareDate || '';
+  $('note').value = record.note || '';
+  $('attachment').hidden = item.id !== 'ladders';
+  report('saved',storageError ? 'Browseren kunne ikke læse de gemte oplysninger.' : 'Dato og notat gemmes automatisk.',storageError);
+  refreshCountdown();
+  $('title').focus();
+  window.scrollTo(0,0);
+}
+function save(field, value) {
+  if (!active) return;
+  const updated = {...data, [active.id]: {...data[active.id], [field]:value}};
+  try {
+    writeLocalValue(storageKey,JSON.stringify(updated));
+    data = updated;
+    storageError = false;
+    report('saved','Gemt på denne pc');
+    if (enhancementsReady) renderAttention();
+  } catch { report('saved','Ændringen kunne ikke gemmes i browseren.',true); }
+}
+$('date').addEventListener('change', () => {
+  if (!$('date').validity.valid) return;
+  save('date',$('date').value);
+  refreshCountdown();
+});
+$('note').addEventListener('input', () => save('note',$('note').value));
+$('back').addEventListener('click', () => {
+  const previous = active.id;
+  active = null;
+  $('detail').hidden = true;
+  $('home').hidden = false;
+  renderHome();
+  $('card-'+previous).focus();
+});
+function openFileStore() {
+  return new Promise((resolve,reject) => {
+    const request = indexedDB.open('sikkerhedsoverblik-filer',1);
+    request.onupgradeneeded = () => request.result.createObjectStore('vedhaeftninger');
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+async function fileStore(file) {
+  const db = await openFileStore();
+  try {
+    return await new Promise((resolve,reject) => {
+      const transaction = db.transaction('vedhaeftninger',file ? 'readwrite' : 'readonly');
+      const store = transaction.objectStore('vedhaeftninger');
+      const request = file ? store.put({name:file.name,blob:file},'stigeoversigt') : store.get('stigeoversigt');
+      transaction.oncomplete = () => {
+        if (file && folderEnabled && !folderSuspended) markFolderChanged();
+        resolve(request.result);
+      };
+      transaction.onabort = transaction.onerror = () => reject(transaction.error || request.error);
+    });
+  } finally { db.close(); }
+}
+function displayFile(file) {
+  attachedFile = file;
+  if (fileUrl) URL.revokeObjectURL(fileUrl);
+  fileUrl = file ? URL.createObjectURL(file.blob) : null;
+  $('filename').textContent = file ? file.name : 'Ingen fil vedhæftet';
+  $('download').hidden = !file;
+  if (file) {
+    $('download').href = fileUrl;
+    $('download').download = file.name;
+  }
+}
+$('choose').addEventListener('keydown', event => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    $('excel').click();
+  }
+});
+$('excel').addEventListener('change', async () => {
+  const file = $('excel').files[0];
+  $('excel').value = '';
+  if (!file || busy) return;
+  if (!/\.(xlsx|xls|xlsm|xlsb)$/i.test(file.name)) {
+    report('file-feedback','Vælg en Excel-fil med endelsen .xlsx, .xls, .xlsm eller .xlsb.',true);
+    return;
+  }
+  busy = true;
+  $('excel').disabled = true;
+  report('file-feedback','Gemmer Excel-filen …');
+  try {
+    await fileStore(file);
+    displayFile({name:file.name,blob:file});
+    report('file-feedback','Excel-filen er gemt på denne pc.');
+    if (!active) renderHome();
+  } catch { report('file-feedback','Excel-filen kunne ikke gemmes i browseren.',true); }
+  finally {
+    busy = false;
+    $('excel').disabled = false;
+  }
+});
+const employeeKey = 'sikkerhedsoverblik-medarbejdere-v1';
+let employees = [];
+let employeeReadError = false;
+try {
+  employees = JSON.parse(localStorage.getItem(employeeKey) || '[]');
+  if (!Array.isArray(employees)) throw new Error('Ugyldig medarbejderliste');
+} catch {
+  employees = [];
+  employeeReadError = true;
+}
+function updateEmployeeCount() {
+  const count = employees.length;
+  $('employee-count').textContent = count === 1 ? '1 ny medarbejder' : count + ' nye medarbejdere';
+}
+function saveEmployees(updated) {
+  try {
+    writeLocalValue(employeeKey, JSON.stringify(updated));
+    employees = updated;
+    updateEmployeeCount();
+    return true;
+  } catch {
+    report('employee-feedback','Ændringen kunne ikke gemmes i browseren.',true);
+    return false;
+  }
+}
+function canRemove(employee) {
+  return employee.video === true && employee.tour === true;
+}
+function renderEmployees() {
+  const list = $('employee-list');
+  list.replaceChildren();
+  $('employee-empty').hidden = employees.length > 0 || employeeReadError;
+  for (const employee of employees) {
+    const row = $('employee-template').content.firstElementChild.cloneNode(true);
+    row.querySelector('h3').textContent = employee.name;
+    row.querySelector('p').textContent = employee.department + ' · AMR ' + employee.amr;
+    const remove = row.querySelector('button');
+    remove.disabled = !canRemove(employee);
+    remove.setAttribute('aria-label','Fjern medarbejder ' + employee.name);
+    for (const checkbox of row.querySelectorAll('input')) {
+      checkbox.checked = employee[checkbox.name] === true;
+      checkbox.addEventListener('change', () => {
+        const current = employees.find(record => record.id === employee.id);
+        if (!current) return;
+        const changed = {...current, [checkbox.name]:checkbox.checked};
+        const updated = employees.map(record => record.id === current.id ? changed : record);
+        if (saveEmployees(updated)) {
+          remove.disabled = !canRemove(changed);
+          report('employee-feedback','Introduktion gemt.');
+        } else {
+          checkbox.checked = current[checkbox.name] === true;
+        }
+      });
+    }
+    remove.addEventListener('click', () => {
+      const current = employees.find(record => record.id === employee.id);
+      if (!current || !canRemove(current)) return;
+      if (!saveEmployees(employees.filter(record => record.id !== current.id))) return;
+      renderEmployees();
+      $('employee-name').focus();
+      report('employee-feedback',current.name + ' er fjernet fra listen.');
+    });
+    list.append(row);
+  }
+}
+$('employees-card').addEventListener('click', () => {
+  $('home').hidden = true;
+  $('employees').hidden = false;
+  renderEmployees();
+  if (employeeReadError) {
+    report('employee-feedback','Browseren kunne ikke læse medarbejderlisten.',true);
+    $('employee-form').querySelector('button').disabled = true;
+  }
+  $('employees-title').focus();
+  window.scrollTo(0,0);
+});
+$('employees-back').addEventListener('click', () => {
+  $('employees').hidden = true;
+  $('home').hidden = false;
+  $('employees-card').focus();
+});
+$('employee-form').addEventListener('submit', event => {
+  event.preventDefault();
+  if (employeeReadError) return;
+  const form = event.currentTarget;
+  const name = form.elements.namedItem('name').value.trim();
+  const department = form.elements.namedItem('department').value;
+  const amr = form.elements.namedItem('amr').value.trim();
+  if (!name || !department || !amr) {
+    report('employee-feedback','Udfyld navn, afdeling og AMR.',true);
+    return;
+  }
+  const id = crypto.randomUUID();
+  if (!saveEmployees([...employees,{id,name,department,amr,video:false,tour:false}])) return;
+  form.reset();
+  renderEmployees();
+  $('employee-name').focus();
+  report('employee-feedback',name + ' er tilføjet.');
+});
+updateEmployeeCount();
+renderHome();
+fileStore().then(file => {
+  if (!attachedFile && !busy) displayFile(file);
+  if (!active && file) renderHome();
+}).catch(() => report('file-feedback','Browseren kunne ikke læse den lokale filoversigt.',true));
+let lastDay = new Date().toDateString();
+setInterval(() => {
+  const day = new Date().toDateString();
+  if (day === lastDay) return;
+  lastDay = day;
+  $('today').textContent = fullDate.format(new Date());
+  if (active) refreshCountdown();
+  else renderHome();
+}, 30000);
+const taskKey = 'sikkerhedsoverblik-tidsregistrering-v1';
+let tasks = [];
+let taskReadError = false;
+function readTasks() {
+  const saved = JSON.parse(localStorage.getItem(taskKey) || '[]');
+  if (!Array.isArray(saved)) throw new Error('Ugyldig opgaveliste');
+  return saved;
+}
+function taskReport(message, error = false) {
+  report('task-history-feedback', message, error);
+  report('open-task-feedback', message, error);
+  report('task-feedback', message, error);
+}
+function saveTaskChange(change) {
+  try {
+    const updated = change(readTasks(), Date.now());
+    if (!updated) return false;
+    writeLocalValue(taskKey, JSON.stringify(updated));
+    tasks = updated;
+    taskReadError = false;
+    return true;
+  } catch {
+    taskReport('Ændringen kunne ikke gemmes i browseren.', true);
+    return false;
+  }
+}
+function taskTotal(task, now = Date.now()) {
+  return taskDays(task,now).reduce((sum,[,time])=>sum+time,0);
+}
+function taskDuration(milliseconds) {
+  const minutes = Math.floor(milliseconds / 60000);
+  if (milliseconds > 0 && minutes === 0) return 'Under 1 min.';
+  return Math.floor(minutes / 60) + ' t ' + minutes % 60 + ' min.';
+}
+function taskClock(milliseconds) {
+  const seconds = Math.floor(milliseconds / 1000);
+  return [Math.floor(seconds / 3600), Math.floor(seconds / 60) % 60, seconds % 60]
+    .map(value => String(value).padStart(2, '0')).join(':');
+}
+function stopTask(task, now) {
+  if (task.startedAt === null) return task;
+  const end = Math.max(task.startedAt, now);
+  return {...task, startedAt:null, sessions:[...task.sessions,{start:task.startedAt,end}]};
+}
+function runTaskAction(id, action) {
+  const saved = saveTaskChange((current, now) => {
+    const task = current.find(item => item.id === id);
+    if (!task) return;
+    if (action === 'start') {
+      return current.map(item => item.id === id
+        ? {...item, startedAt:item.startedAt ?? now, completedAt:null,workState:'open',
+            previousCompletions:taskCompletionDates(item)}
+        : stopTask(item, now));
+    }
+    if (action === 'finish') return completeTasks(current,id,now);
+    if (action === 'stop' && task.startedAt === null) return;
+    return current.map(item => {
+      if (item.id !== id) return item;
+      const stopped = stopTask(item, now);
+      return stopped;
+    });
+  });
+  if (!saved) return;
+  taskReport({start:'Timeren er startet.',stop:'Timeren er stoppet.',finish:'Opgaven er gemt som fuldført.'}[action]);
+  if (action === 'start' && !$('task-history').hidden) {
+    $('close-task-history').click();
+    $('stop-task').focus();
+  } else {
+    renderTasks();
+    if (!$('open-task-view').hidden) {
+      const next = action === 'start' ? 'stop' : action === 'stop' ? 'start' : null;
+      const button = next && $(next + '-task-' + id);
+      (button || $('open-tasks-title')).focus();
+    } else {
+      $('show-open-tasks').focus();
+    }
+  }
+}
+function taskButton(label, action, primary = false) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = primary ? 'primary' : 'task-secondary';
+  button.textContent = label;
+  button.addEventListener('click', action);
+  return button;
+}
+function refreshTaskClock() {
+  const running = tasks.find(task => task.startedAt !== null);
+  if (running) $('running-clock').textContent = taskClock(taskTotal(running));
+}
+function renderTasks() {
+  if (enhancementsReady) {
+    renderAttention();
+    if (!$('day-end').hidden) renderDayEnd();
+  }
+  const running = tasks.find(task => task.startedAt !== null);
+  $('task-name').disabled = taskReadError;
+  $('task-preset').disabled = taskReadError;
+  $('quick-task').querySelector('button').disabled = taskReadError;
+  $('task-current').hidden = !running;
+  if (running) {
+    $('running-task-name').textContent = running.title;
+    refreshTaskClock();
+  }
+  const open = tasks.filter(task => task.completedAt === null);
+  $('show-open-tasks').textContent = taskReadError ? 'Åbne opgaver' : 'Åbne opgaver (' + open.length + ')';
+  renderMindBoard(open);
+  if (!$('open-task-view').hidden) renderOpenTasks(open);
+  if (!$('task-history').hidden) renderTaskHistory();
+}
+function renderMindBoard(open) {
+  const selected = open.filter(task => task.topOfMind === true);
+  $('mind-count').textContent = selected.length + (selected.length === 1 ? ' opgave' : ' opgaver');
+  $('mind-empty').hidden = selected.length > 0 || taskReadError;
+  $('mind-list').replaceChildren();
+  for (const task of selected) {
+    const card = document.createElement('article');
+    card.className = 'mind-card';
+    const title = document.createElement('strong');
+    title.textContent = task.title;
+    const status = document.createElement('span');
+    status.className = 'muted';
+    status.textContent = task.startedAt !== null ? 'Timer kører' : 'Registreret tid: ' + taskDuration(taskTotal(task));
+    const running = task.startedAt !== null;
+    const timer = taskButton(running ? 'Stop timer' : 'Start timer',
+      () => runTaskAction(task.id,running ? 'stop' : 'start'));
+    status.textContent = taskStateLabel(task) + ' · ' + taskDuration(taskTotal(task));
+    card.append(title,status,timer,taskButton('Noter og detaljer',()=>taskEditorOpen(task.id)));
+    $('mind-list').append(card);
+  }
+}
+function renderOpenTasks(open) {
+  const query=$('open-task-search').value;
+  open=open.filter(task=>taskMatchesSearch(task,query));
+  $('open-search-count').textContent=open.length+' opgaver fundet';
+  $('open-tasks-empty').hidden = open.length > 0 || taskReadError;
+  const list = $('open-tasks');
+  list.replaceChildren();
+  for (const task of open) {
+    const row = document.createElement('div');
+    row.className = 'task-row';
+    const info = document.createElement('div');
+    const title = document.createElement('strong');
+    title.textContent = task.title;
+    const status = document.createElement('div');
+    status.className = 'muted';
+    status.textContent = task.startedAt !== null ? 'Timer kører' : 'Registreret tid: ' + taskDuration(taskTotal(task));
+    const dates = document.createElement('div');
+    dates.className = 'muted';
+    dates.textContent = [taskDateSummary(task),taskDeadlineLabel(task)].filter(Boolean).join(' · ');
+    const selection = document.createElement('label');
+    selection.className = 'mind-select';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.topOfMind === true;
+    checkbox.addEventListener('change', () => {
+      const selected = checkbox.checked;
+      const saved = saveTaskChange(current => current.map(item =>
+        item.id === task.id ? {...item,topOfMind:selected} : item));
+      if (!saved) {
+        checkbox.checked = !selected;
+        return;
+      }
+      renderMindBoard(tasks.filter(item => item.completedAt === null));
+      taskReport(selected ? 'Opgaven vises på Top of mind.' : 'Opgaven er fjernet fra Top of mind.');
+    });
+    const caption = document.createElement('span');
+    caption.textContent = 'Vis på Top of mind';
+    selection.append(checkbox, caption);
+    status.textContent = taskStateLabel(task) + ' · ' + taskDuration(taskTotal(task));
+    const next = document.createElement('p');
+    next.className = 'task-note-preview';
+    next.textContent = task.note || '';
+    info.append(title, status, dates, next, selection);
+    const buttons = document.createElement('div');
+    buttons.className = 'task-actions';
+    const running = task.startedAt !== null;
+    const timer = taskButton(running ? 'Stop timer' : 'Start timer',
+      () => runTaskAction(task.id, running ? 'stop' : 'start'));
+    timer.id = (running ? 'stop' : 'start') + '-task-' + task.id;
+    buttons.append(timer);
+    buttons.append(taskButton('Noter og detaljer',()=>taskEditorOpen(task.id)));
+    buttons.append(taskButton('Markér fuldført', () => runTaskAction(task.id, 'finish')));
+    row.append(info, buttons);
+    list.append(row);
+  }
+}
+function nextMidnight(timestamp) {
+  const date = new Date(timestamp);
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).getTime();
+}
+function taskDays(task, now) {
+  const days = new Map();
+  const sessions = [...task.sessions];
+  if (task.startedAt !== null) sessions.push({start:task.startedAt, end:now});
+  for (const session of sessions) {
+    let cursor = session.start;
+    while (cursor < session.end) {
+      const date = new Date(cursor);
+      const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+      const end = Math.min(session.end, nextMidnight(cursor));
+      days.set(day, (days.get(day) || 0) + end - cursor);
+      cursor = end;
+    }
+  }
+  for (const correction of task.dailyCorrections || []) {
+    const day = localTaskDate(correction.day);
+    days.set(day,(days.get(day)||0)+correction.delta);
+  }
+  return [...days.entries()].map(([day,time])=>[day,Math.max(0,time)]).sort(([a], [b]) => b - a);
+}
+function taskCreatedAt(task) {
+  return task.createdAt ?? task.sessions[0]?.start ?? task.startedAt;
+}
+function taskCompletionDates(task) {
+  const previous = task.previousCompletions || [];
+  return task.completedAt === null ? previous : [...previous, task.completedAt];
+}
+function taskDateSummary(task) {
+  const created = taskCreatedAt(task);
+  const completions = taskCompletionDates(task);
+  const parts = [created === null ? 'Oprettelsesdato ukendt' : 'Oprettet ' + dateFormat.format(created)];
+  if (completions.length) {
+    parts.push((task.completedAt === null ? 'Sidst afsluttet ' : 'Afsluttet ') + dateFormat.format(completions.at(-1)));
+  }
+  return parts.join(' · ');
+}
+function taskPeriodDays(task, now, start, end) {
+  const days = new Map(taskDays(task, now)
+    .filter(([day]) => day >= start && day < end)
+    .map(([day, time]) => [day, {day,time,events:[]}]));
+  const addEvent = (timestamp, label) => {
+    if (timestamp === null || timestamp < start || timestamp >= end) return;
+    const date = new Date(timestamp);
+    date.setHours(0,0,0,0);
+    const day = date.getTime();
+    const row = days.get(day) || {day,time:0,events:[]};
+    if (!row.events.includes(label)) row.events.push(label);
+    days.set(day,row);
+  };
+  addEvent(taskCreatedAt(task),'Oprettet');
+  for (const timestamp of taskCompletionDates(task)) addEvent(timestamp,'Afsluttet');
+  return [...days.values()].sort((a,b) => b.day - a.day);
+}
+let taskPeriod = null;
+let taskExportRows = [];
+function localTaskDate(value) {
+  const date = new Date(value + 'T00:00:00');
+  return date.getTime();
+}
+function renderTaskHistory() {
+  if (enhancementsReady) renderCategoryReport();
+  const list = $('task-history-list');
+  const expanded = new Set([...list.querySelectorAll('details[open]')].map(row => row.dataset.taskId));
+  list.replaceChildren();
+  const now = Date.now();
+  const {start = -Infinity, end = Infinity} = taskPeriod || {};
+  taskExportRows = [];
+  let total = 0;
+  let count = 0;
+  for (const task of tasks) {
+    if (!taskMatchesSearch(task,$('history-task-search').value)) continue;
+    const days = taskPeriodDays(task, now, start, end);
+    if (taskPeriod && !days.length) continue;
+    count++;
+    const duration = days.reduce((sum, entry) => sum + entry.time, 0);
+    total += duration;
+    const row = document.createElement('details');
+    row.className = 'task-history-row';
+    row.dataset.taskId = task.id;
+    row.open = expanded.has(task.id);
+    const summary = document.createElement('summary');
+    const status = taskStateLabel(task);
+    summary.textContent = task.title + ' · ' + status + ' · ' + taskDuration(duration);
+    const dates = document.createElement('div');
+    dates.className = 'muted';
+    dates.textContent = [taskDateSummary(task),taskDeadlineLabel(task)].filter(Boolean).join(' · ');
+    row.append(summary, dates);
+    const note = document.createElement('p');
+    note.className = 'task-note-preview';
+    note.textContent = task.note || '';
+    row.append(note, taskButton('Noter og ret tid',()=>taskEditorOpen(task.id)));
+    const breakdown = document.createElement('ul');
+    if (!days.length) {
+      const empty = document.createElement('p');
+      empty.textContent = 'Der er endnu ikke registreret tid.';
+      row.append(empty);
+    } else {
+      for (const {day,time,events} of days) {
+        if (taskPeriod) taskExportRows.push({
+          day, title:task.title, status, time, events, created:taskCreatedAt(task),
+          completed:taskCompletionDates(task).at(-1) ?? null
+        });
+        const entry = document.createElement('li');
+        entry.textContent = [fullDate.format(day), ...events, taskDuration(time)].join(' · ');
+        breakdown.append(entry);
+      }
+      row.append(breakdown);
+    }
+    if (task.startedAt === null) row.append(taskButton('Fortsæt og start timer', () => runTaskAction(task.id, 'start')));
+    list.append(row);
+  }
+  $('export-task-period').disabled = taskReadError || !taskExportRows.length;
+  const scope = taskPeriod ? dateFormat.format(new Date(start)) + ' – ' + dateFormat.format(new Date(end - 1)) : 'Alle dage';
+  $('task-history-summary').textContent = taskReadError ? 'Opgavehistorikken kunne ikke indlæses.' : !count
+    ? scope + ' · Ingen opgaver at vise'
+    : scope + ' · ' + count + (count === 1 ? ' opgave' : ' opgaver') + ' · I alt ' + taskDuration(total);
+}
+$('task-preset').addEventListener('change', event => {
+  const preset = event.currentTarget.value;
+  if (preset) $('task-name').value = preset;
+});
+$('task-name').addEventListener('input', () => {
+  if ($('task-name').value !== $('task-preset').value) $('task-preset').value = '';
+});
+$('quick-task').addEventListener('submit', event => {
+  event.preventDefault();
+  const title = $('task-name').value.trim();
+  if (!title) {
+    taskReport('Skriv et navn på opgaven.', true);
+    return;
+  }
+  const saved = saveTaskChange((current, now) => [
+    {id:crypto.randomUUID(),title,category:taskCategory({title}),workState:'open',createdAt:now,startedAt:now,completedAt:null,sessions:[]},
+    ...current.map(task => stopTask(task, now))
+  ]);
+  if (!saved) return;
+  event.currentTarget.reset();
+  renderTasks();
+  $('stop-task').focus();
+  taskReport('Opgaven er oprettet, og timeren er startet.');
+});
+$('stop-task').addEventListener('click', () => {
+  const running = tasks.find(task => task.startedAt !== null);
+  if (running) runTaskAction(running.id, 'stop');
+});
+$('show-open-tasks').addEventListener('click', () => {
+  $('home').hidden = true;
+  $('open-task-view').hidden = false;
+  renderTasks();
+  $('open-tasks-title').focus();
+  window.scrollTo(0, 0);
+});
+$('close-open-tasks').addEventListener('click', () => {
+  $('open-task-view').hidden = true;
+  $('home').hidden = false;
+  $('show-open-tasks').focus();
+});
+$('open-task-history').addEventListener('click', () => {
+  $('home').hidden = true;
+  $('task-history').hidden = false;
+  renderTaskHistory();
+  $('task-history-title').focus();
+  window.scrollTo(0,0);
+});
+$('close-task-history').addEventListener('click', () => {
+  $('task-history').hidden = true;
+  $('home').hidden = false;
+  renderTasks();
+  $('open-task-history').focus();
+});
+$('task-period-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const from = $('task-period-start').value;
+  const to = $('task-period-end').value;
+  const start = localTaskDate(from);
+  const lastDay = localTaskDate(to);
+  if (!Number.isFinite(start) || !Number.isFinite(lastDay) || start > lastDay) {
+    report('task-history-feedback','Vælg en startdato og en slutdato på eller efter startdatoen.',true);
+    return;
+  }
+  taskPeriod = {from,to,start,end:nextMidnight(lastDay)};
+  report('task-history-feedback','');
+  renderTaskHistory();
+});
+for (const id of ['task-period-start','task-period-end']) {
+  $(id).addEventListener('input', () => {
+    if (!taskPeriod) return;
+    taskPeriod = null;
+    report('task-history-feedback','Tryk på Generér oversigt for at anvende de nye datoer.');
+    renderTaskHistory();
+  });
+}
+$('clear-task-period').addEventListener('click', () => {
+  $('task-period-form').reset();
+  taskPeriod = null;
+  report('task-history-feedback','');
+  renderTaskHistory();
+});
+function taskCsvField(value) {
+  const safe = /^[\s]*[=+@-]|^[\t\r\n]/u.test(value) ? "'" + value : value;
+  return '"' + safe.replaceAll('"','""') + '"';
+}
+function taskCsv(rows) {
+  const ordered = [...rows].sort((a,b) => a.day - b.day || a.title.localeCompare(b.title,'da'));
+  const csvDate = new Intl.DateTimeFormat('da-DK',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const format = timestamp => timestamp === null ? '' : csvDate.format(timestamp);
+  const lines = ordered.map(({day,title,status,time,events,created,completed}) => {
+    const minutes = (time / 60000).toFixed(4).replace('.',',');
+    const fields = [format(day), title, status].map(taskCsvField);
+    return [...fields, minutes, ...[events.join(', '),format(created),format(completed)].map(taskCsvField)].join(';');
+  });
+  return ['Dato;Opgave;Status;Tid i minutter;Hændelse;Oprettet;Senest afsluttet',...lines].join('\r\n');
+}
+$('export-task-period').addEventListener('click', () => {
+  if (!taskPeriod || taskReadError || !taskExportRows.length) return;
+  const file = new Blob(['\ufeff',taskCsv(taskExportRows)],{type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(file);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'Opgavehistorik_' + taskPeriod.from + '_til_' + taskPeriod.to + '.csv';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+});
+function loadTasks() {
+  try {
+    tasks = readTasks();
+    taskReadError = false;
+  } catch {
+    taskReadError = true;
+    taskReport('Browseren kunne ikke læse de gemte opgaver.', true);
+  }
+  renderTasks();
+}
+window.addEventListener('storage', event => {
+  if (event.key === taskKey || event.key === null) loadTasks();
+});
+loadTasks();
+setInterval(refreshTaskClock, 1000);
+
+const orderKey = 'sikkerhedsoverblik-bestillinger-v1';
+let orders = [];
+let orderReadError = false;
+let editingOrder = null;
+function todayOrderDate() {
+  const now = new Date();
+  return [now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+}
+function readOrders() {
+  const saved = JSON.parse(localStorage.getItem(orderKey) || '[]');
+  if (!Array.isArray(saved)) throw new Error('Ugyldig bestillingsliste');
+  return saved;
+}
+function changeOrders(change) {
+  try {
+    const updated = change(readOrders());
+    if (!updated) return false;
+    writeLocalValue(orderKey, JSON.stringify(updated));
+    orders = updated;
+    return true;
+  } catch {
+    report('order-feedback','Bestillingen kunne ikke gemmes i browseren.',true);
+    return false;
+  }
+}
+function resetOrderForm() {
+  $('order-form').reset();
+  $('order-form').elements.namedItem('ordered').value = todayOrderDate();
+  editingOrder = null;
+  $('order-save').textContent = 'Gem bestilling';
+  $('order-cancel').hidden = true;
+}
+function editOrder(order) {
+  editingOrder = order.id;
+  const form = $('order-form');
+  for (const name of ['person','item','ordered','expected','note']) {
+    form.elements.namedItem(name).value = order[name] || '';
+  }
+  $('order-save').textContent = 'Gem ændringer';
+  $('order-cancel').hidden = false;
+  form.elements.namedItem('person').focus();
+  form.scrollIntoView({block:'center',behavior:'smooth'});
+}
+function orderDateLabel(value) {
+  return value ? dateFormat.format(new Date(value + 'T00:00:00')) : 'Ikke angivet';
+}
+function setOrderDelivered(id, delivered) {
+  const saved = changeOrders(current => current.map(order =>
+    order.id === id ? {...order,deliveredAt:delivered ? todayOrderDate() : null} : order));
+  if (!saved) return;
+  if (editingOrder === id) resetOrderForm();
+  renderOrders();
+  report('order-feedback',delivered ? 'Bestillingen er markeret som udleveret.' : 'Bestillingen er genåbnet.');
+  $('orders-title').focus();
+}
+function renderOrders() {
+  if (enhancementsReady) renderAttention();
+  const open = orders.filter(order => !order.deliveredAt)
+    .sort((a,b) => (a.expected || '9999').localeCompare(b.expected || '9999'));
+  $('orders-count').textContent = open.length + ' åbne';
+  $('orders-empty').hidden = orderReadError || open.length > 0;
+  $('orders-list').replaceChildren();
+  for (const order of open) {
+    const row = document.createElement('details');
+    row.className = 'task-history-row order-row';
+    const summary = document.createElement('summary');
+    const delivery = order.expected ? ' · Levering ' + orderDateLabel(order.expected) : '';
+    const late = !order.deliveredAt && order.expected && order.expected < todayOrderDate();
+    summary.textContent = order.person + ' · ' + order.item + delivery + (late ? ' · Følg op' : '');
+    if (late) summary.classList.add('error');
+    const dates = document.createElement('p');
+    dates.className = 'muted';
+    dates.textContent = 'Bestilt ' + orderDateLabel(order.ordered) +
+      ' · Forventet levering ' + orderDateLabel(order.expected);
+    const status = document.createElement('p');
+    status.className = 'order-status';
+    if (order.deliveredAt) {
+      status.textContent = 'Udleveret ' + orderDateLabel(order.deliveredAt);
+    } else if (order.expected && order.expected < todayOrderDate()) {
+      status.textContent = 'Leveringsdato passeret · Følg op';
+      status.classList.add('error');
+    } else if (order.expected === todayOrderDate()) {
+      status.textContent = 'Forventes i dag';
+    } else {
+      status.textContent = 'Afventer levering og udlevering';
+    }
+    const note = document.createElement('p');
+    note.className = 'order-note';
+    note.textContent = order.note || 'Ingen noter.';
+    const actions = document.createElement('div');
+    actions.className = 'task-actions';
+    if (!order.deliveredAt) actions.append(taskButton('Redigér', () => editOrder(order)));
+    actions.append(taskButton(order.deliveredAt ? 'Genåbn bestilling' : 'Markér udleveret',
+      () => setOrderDelivered(order.id,!order.deliveredAt)));
+    row.append(summary,dates,status,note,actions);
+    $('orders-list').append(row);
+  }
+}
+$('order-form').addEventListener('submit', event => {
+  event.preventDefault();
+  if (orderReadError) return;
+  const fields = event.currentTarget.elements;
+  const values = Object.fromEntries(['person','item','ordered','expected','note']
+    .map(name => [name,fields.namedItem(name).value.trim()]));
+  if (!values.person || !values.item || !values.ordered) {
+    report('order-feedback','Udfyld navn, det bestilte og bestillingsdato.',true);
+    return;
+  }
+  const saved = changeOrders(current => {
+    if (editingOrder) {
+      if (!current.some(order => order.id === editingOrder && !order.deliveredAt)) {
+        report('order-feedback','Bestillingen er ændret i en anden fane. Genåbn den fra listen.',true);
+        return;
+      }
+      return current.map(order => order.id === editingOrder ? {...order,...values} : order);
+    }
+    return [{...values,id:crypto.randomUUID(),deliveredAt:null},...current];
+  });
+  if (!saved) return;
+  resetOrderForm();
+  renderOrders();
+  report('order-feedback','Bestillingen er gemt.');
+});
+$('order-cancel').addEventListener('click', resetOrderForm);
+function loadOrders() {
+  try {
+    orders = readOrders();
+    orderReadError = false;
+  } catch {
+    orderReadError = true;
+    report('order-feedback','Browseren kunne ikke læse bestillingerne.',true);
+  }
+  $('order-save').disabled = orderReadError;
+  renderOrders();
+}
+resetOrderForm();
+loadOrders();
+window.addEventListener('storage', event => {
+  if (event.key === orderKey || event.key === null) loadOrders();
+});
+
+const designOptions = document.querySelectorAll('[data-design-option]');
+const designDescriptions = {
+  dashboard:'Lyse kort med tydelige nedtællinger.',
+  operations:'Mørk visning med kompakte rækker.',
+  notebook:'Varme farver og opdeling som i en arbejdsmappe.',
+  newspaper:'Stor avisforside med spalter og tryksværte.',
+  steampunk:'Mørk kontrolpult med messingkanter og målerskiver.',
+  funky:'Pastelkontraster, bobleformer og markante skygger.'
+};
+const designKey = 'sikkerhedsoverblik-design';
+function showDesign(design) {
+  if (!Object.hasOwn(designDescriptions,design)) return;
+  document.documentElement.dataset.design = design;
+  $('design-caption').textContent = designDescriptions[design];
+  for (const button of designOptions) {
+    button.setAttribute('aria-pressed',String(button.dataset.designOption === design));
+  }
+}
+for (const button of designOptions) {
+  button.addEventListener('click', () => {
+    const design = button.dataset.designOption;
+    showDesign(design);
+    try { writeLocalValue(designKey,design); } catch {}
+  });
+}
+try { showDesign(localStorage.getItem(designKey)); } catch {}
+
+// Task details, attention overview, category reports and portable backups.
+const taskCategories = [...$('task-preset').options].map(option => option.value).filter(Boolean);
+taskCategories.push('Andet');
+var enhancementsReady = true;
+let editedTaskId = null;
+let taskEditorOrigin = 'open-task-view';
+function taskCategory(task) {
+  if (taskCategories.includes(task.category)) return task.category;
+  const title = task.title.toLocaleLowerCase('da');
+  return taskCategories.find(category => title === category.toLocaleLowerCase('da') ||
+    title.startsWith(category.toLocaleLowerCase('da') + ' ')) || 'Andet';
+}
+for (const category of taskCategories) {
+  const option = document.createElement('option');
+  option.value = category;
+  option.textContent = category;
+  $('task-edit-category').append(option);
+}
+function taskStateLabel(task) {
+  if (task.completedAt !== null) return 'Fuldført';
+  if (task.startedAt !== null) return 'Timer kører';
+  if (task.workState === 'waiting') return 'Afventer ' + (task.waitingFor || 'andre');
+  return 'Åben';
+}
+function taskEditorOpen(id) {
+  const task = tasks.find(item => item.id === id);
+  if (!task) return;
+  editedTaskId = id;
+  taskEditorOrigin = !$('day-end').hidden ? 'day-end' :
+    !$('task-history').hidden ? 'task-history' :
+    !$('open-task-view').hidden ? 'open-task-view' : 'home';
+  $(taskEditorOrigin).hidden = true;
+  $('task-editor').hidden = false;
+  $('task-editor-title').textContent = task.title;
+  $('task-edit-title').value = task.title;
+  $('task-edit-category').value = taskCategory(task);
+  $('task-edit-state').value = task.workState || 'open';
+  $('task-edit-who').value = task.waitingFor || '';
+  $('task-edit-followup').value = task.followUp || '';
+  $('task-edit-note').value = task.note || '';
+  $('task-edit-deadline').value = task.deadline || '';
+  $('task-edit-repeat').value = task.repeat || '';
+  $('checklist-text').value='';
+  renderChecklist(task);
+  renderTimeEditor(task);
+  report('task-edit-feedback','');
+  $('task-editor-title').focus();
+  window.scrollTo(0,0);
+}
+$('task-editor-back').addEventListener('click', () => {
+  $('task-editor').hidden = true;
+  $(taskEditorOrigin).hidden = false;
+  renderTasks();
+  const focus = taskEditorOrigin === 'home' ? 'show-open-tasks' :
+    taskEditorOrigin === 'day-end' ? 'day-end-title' :
+    taskEditorOrigin === 'task-history' ? 'task-history-title' : 'open-tasks-title';
+  $(focus).focus();
+  editedTaskId = null;
+});
+$('task-details-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const title = $('task-edit-title').value.trim();
+  if (!title) return;
+  const saved = saveTaskChange((current,now) => current.map(task => {
+    if (task.id !== editedTaskId) return task;
+    const state = $('task-edit-state').value;
+    const updated = state === 'waiting' ? stopTask(task,now) : task;
+    return {...updated,title,category:$('task-edit-category').value,
+      workState:state,waitingFor:$('task-edit-who').value.trim(),
+      followUp:$('task-edit-followup').value,note:$('task-edit-note').value,
+      deadline:$('task-edit-deadline').value,repeat:$('task-edit-repeat').value};
+  }));
+  if (!saved) {
+    report('task-edit-feedback','Opgaven kunne ikke gemmes.',true);
+    return;
+  }
+  $('task-editor-title').textContent = title;
+  renderTimeEditor(tasks.find(task => task.id === editedTaskId));
+  renderTasks();
+  report('task-edit-feedback','Opgavedetaljer gemt. Afventer andre stopper en aktiv timer på opgaven.');
+});
+let timeEditorBaseline = '';
+function timeFingerprint(task) {
+  return JSON.stringify([task.sessions,task.dailyCorrections || []]);
+}
+function inputDay(timestamp) {
+  const date = new Date(timestamp);
+  return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');
+}
+function addTimeRow(day = todayOrderDate(), duration = 0, fixedDate = false) {
+  const row = document.createElement('div');
+  row.className = 'time-edit-row';
+  row.dataset.originalDay = day;
+  row.dataset.originalMinutes = String(Math.floor(duration/60000));
+  for (const [field,label,type,value] of [
+    ['day','Dato','date',day],
+    ['hours','Timer','number',Math.floor(duration/3600000)],
+    ['minutes','Minutter','number',Math.floor(duration/60000)%60]
+  ]) {
+    const wrapper = document.createElement('label');
+    wrapper.textContent = label;
+    const input = document.createElement('input');
+    input.type = type;
+    input.required = true;
+    input.dataset.field = field;
+    input.value = String(value);
+    if (type === 'number') {
+      input.min = '0';
+      input.max = field === 'minutes' ? '59' : '24';
+      input.step = '1';
+    } else {
+      input.max = todayOrderDate();
+      input.readOnly = fixedDate;
+    }
+    wrapper.append(input);
+    row.append(wrapper);
+  }
+  $('time-edit-rows').append(row);
+}
+function renderTimeEditor(task) {
+  $('time-edit-rows').replaceChildren();
+  timeEditorBaseline = timeFingerprint(task);
+  const days = taskDays(task,Date.now());
+  for (const [day,time] of days) addTimeRow(inputDay(day),time,true);
+  if (!days.length) addTimeRow();
+  const running = task.startedAt !== null;
+  for (const control of $('time-edit-form').querySelectorAll('input,button')) control.disabled = running;
+  $('time-edit-form').dataset.running = String(running);
+  $('time-stop-active').hidden = !running;
+}
+$('time-stop-active').addEventListener('click', () => {
+  const saved = saveTaskChange((current,now)=>current.map(task=>task.id===editedTaskId ? stopTask(task,now) : task));
+  if (!saved) return;
+  renderTimeEditor(tasks.find(task=>task.id===editedTaskId));
+  renderTasks();
+  report('task-edit-feedback','Timeren er stoppet. Du kan nu rette timer og minutter.');
+});
+$('time-add-row').addEventListener('click', () => {
+  if ($('time-edit-form').dataset.running !== 'true') addTimeRow();
+});
+function correctedTask(task, rows, now) {
+  const days = new Map(taskDays(task,now));
+  const seen = new Set();
+  const corrections = [...(task.dailyCorrections || [])];
+  for (const row of rows) {
+    const day = row.querySelector('[data-field=day]').value;
+    const hours = Number(row.querySelector('[data-field=hours]').value);
+    const minutes = Number(row.querySelector('[data-field=minutes]').value);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !Number.isFinite(localTaskDate(day)) ||
+        day > todayOrderDate() || !Number.isInteger(hours) || !Number.isInteger(minutes) ||
+        hours < 0 || minutes < 0 || minutes > 59 || hours*60+minutes > 1440) {
+      throw new Error('Vælg en dato frem til i dag og en tid mellem 0 og 24 timer. Minutter skal være mellem 0 og 59.');
+    }
+    if (seen.has(day)) throw new Error('Hver dato må kun stå én gang. Ret rækken med den pågældende dato.');
+    seen.add(day);
+    const totalMinutes = hours*60+minutes;
+    if (row.dataset.originalDay === day && Number(row.dataset.originalMinutes) === totalMinutes) continue;
+    const delta = totalMinutes*60000 - (days.get(localTaskDate(day)) || 0);
+    if (delta) corrections.push({day,delta,correctedAt:now});
+  }
+  return {...task, dailyCorrections:corrections, timeCorrectedAt:now};
+}
+$('time-edit-form').addEventListener('submit', event => {
+  event.preventDefault();
+  try {
+    const currentTask = readTasks().find(task=>task.id===editedTaskId);
+    if (!currentTask || currentTask.startedAt !== null) throw new Error('Stop opgavens timer, før du retter tiden.');
+    if (timeFingerprint(currentTask) !== timeEditorBaseline) throw new Error('Tiden er ændret. Luk og åbn opgaven igen.');
+    correctedTask(currentTask,[...$('time-edit-rows').children],Date.now());
+    const saved = saveTaskChange((current,now) => {
+      const task = current.find(item=>item.id===editedTaskId);
+      if (!task || task.startedAt !== null) throw new Error('Stop opgavens timer, før du retter tiden.');
+      if (timeFingerprint(task) !== timeEditorBaseline) throw new Error('Tiden er ændret. Luk og åbn opgaven igen.');
+      const updated = correctedTask(task,[...$('time-edit-rows').children],now);
+      return current.map(item=>item.id===task.id ? updated : item);
+    });
+    if (!saved) throw new Error('Tiden kunne ikke gemmes. Kontrollér at datoer er forskellige og tiderne er mellem 0 og 24 timer. Åbn opgaven igen, hvis den er ændret i en anden fane.');
+    renderTimeEditor(tasks.find(task=>task.id===editedTaskId));
+    renderTasks();
+    report('task-edit-feedback','Dagens samlede tid er gemt. Fortsætter du timeren, lægges den nye tid oveni.');
+  } catch (error) { report('task-edit-feedback',error.message,true); }
+});
+function renderAttention() {
+  if (!enhancementsReady) return;
+  const list = $('attention-list');
+  list.replaceChildren();
+  const today = todayOrderDate();
+  const add = (title,message,action) => {
+    const row = document.createElement('li');
+    const button = taskButton(title,action);
+    const note = document.createElement('span');
+    note.textContent = message;
+    row.append(button,note);
+    list.append(row);
+  };
+  for (const item of entries) {
+    const record = data[item.id] || {};
+    const prepDue = record.prepareDate && record.prepareDate <= today;
+    const due = record.date && record.date <= today;
+    if (!prepDue && !due) continue;
+    add(item.name,due ? 'Dato nået · ' + orderDateLabel(record.date) :
+      'Forberedelse fra ' + orderDateLabel(record.prepareDate),() => openDetail(item));
+  }
+  for (const task of tasks.filter(item=>item.completedAt===null && item.deadline && item.deadline<=today)) {
+    add(task.title,taskDeadlineLabel(task),()=>taskEditorOpen(task.id));
+  }
+  for (const task of tasks.filter(item => item.completedAt === null && item.followUp && item.followUp <= today)) {
+    add(task.title,taskStateLabel(task) + ' · Opfølgning ' + orderDateLabel(task.followUp),() => taskEditorOpen(task.id));
+  }
+  for (const order of orders.filter(item => !item.deliveredAt && item.expected && item.expected <= today)) {
+    add(order.person + ' · ' + order.item,'Levering ' + orderDateLabel(order.expected),() => editOrder(order));
+  }
+  $('attention-empty').hidden = list.children.length > 0;
+  $('attention-count').textContent = list.children.length;
+}
+function renderCategoryReport() {
+  const {start = -Infinity,end = Infinity} = taskPeriod || {};
+  const totals = new Map();
+  for (const task of tasks) {
+    if (!taskMatchesSearch(task,$('history-task-search').value)) continue;
+    const duration = taskDays(task,Date.now()).filter(([day]) => day >= start && day < end)
+      .reduce((sum,[,time]) => sum+time,0);
+    if (!duration) continue;
+    const category = taskCategory(task);
+    totals.set(category,(totals.get(category)||0)+duration);
+  }
+  $('category-report-body').replaceChildren();
+  const total = [...totals.values()].reduce((sum,time)=>sum+time,0);
+  for (const [category,time] of [...totals].sort((a,b)=>b[1]-a[1])) {
+    const row = document.createElement('tr');
+    for (const value of [category,taskDuration(time), (100*time/total).toFixed(1).replace('.',',')+' %']) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.append(cell);
+    }
+    $('category-report-body').append(row);
+  }
+  $('category-report-empty').hidden = totals.size > 0;
+  $('export-categories').disabled = totals.size === 0 || taskReadError;
+  $('export-categories').onclick = () => {
+    const lines = ['Opgavetype;Tid i minutter;Andel i procent'];
+    for (const [category,time] of totals) lines.push([
+      taskCsvField(category),(time/60000).toFixed(4).replace('.',','),(100*time/total).toFixed(2).replace('.',',')
+    ].join(';'));
+    downloadData(new Blob(['\ufeff',lines.join('\r\n')],{type:'text/csv;charset=utf-8'}),
+      'Tid_pr_opgavetype_'+(taskPeriod ? taskPeriod.from+'_til_'+taskPeriod.to : 'alle_dage')+'.csv');
+  };
+}
+function downloadData(blob,name) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('prepare-date').addEventListener('change', () => {
+  save('prepareDate',$('prepare-date').value);
+  renderAttention();
+});
+const backupKeys = [storageKey,employeeKey,taskKey,orderKey,designKey];
+let pendingBackup = null;
+async function backupAttachment() {
+  const file = await fileStore();
+  if (!file) return null;
+  const encoded = await new Promise((resolve,reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = () => reject(new Error('Excel-filen kunne ikke læses.'));
+    reader.readAsDataURL(file.blob);
+  });
+  return {name:file.name,type:file.blob.type,base64:encoded};
+}
+async function buildBackup() {
+  if (busy) throw new Error('Vent til Excel-filen er gemt.');
+  const now = Date.now();
+  const values = Object.fromEntries(backupKeys.map(key=>[key,localStorage.getItem(key)]));
+  const current = JSON.parse(values[taskKey] || '[]');
+  values[taskKey] = JSON.stringify(current.map(task=>stopTask(task,now)));
+  return {format:'sikkerhedsoverblik',version:1,exportedAt:now,values,attachment:await backupAttachment()};
+}
+$('backup-export').addEventListener('click', async () => {
+  try {
+    const backup = await buildBackup();
+    downloadData(new Blob([JSON.stringify(backup)],{type:'application/json'}),'Sikkerhedsoverblik_backup_'+todayOrderDate()+'.json');
+    report('backup-feedback','Sikkerhedskopien er hentet. Aktive timere er gemt som stoppede i kopien.');
+  } catch (error) { report('backup-feedback',error.message,true); }
+});
+function validateBackup(backup) {
+  if (!backup || backup.format !== 'sikkerhedsoverblik' || backup.version !== 1 ||
+      !Number.isFinite(backup.exportedAt) || !backup.values ||
+      backupKeys.some(key => !Object.hasOwn(backup.values,key) ||
+        !(backup.values[key] === null || typeof backup.values[key] === 'string'))) {
+    throw new Error('Filen er ikke en gyldig sikkerhedskopi.');
+  }
+  const values = backup.values;
+  const records = JSON.parse(values[storageKey] || '{}');
+  if (!records || typeof records !== 'object' || Array.isArray(records)) throw new Error('Ugyldige mødenoter.');
+  const validDate = value => typeof value === 'string' && (value === '' ||
+    /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(localTaskDate(value)));
+  for (const item of entries) {
+    const record = records[item.id];
+    if (record && (typeof record !== 'object' || Array.isArray(record) ||
+      ['date','prepareDate'].some(key => record[key] !== undefined && !validDate(record[key])) ||
+      record.note !== undefined && typeof record.note !== 'string')) throw new Error('Ugyldige mødedata.');
+  }
+  const restoredTasks = JSON.parse(values[taskKey] || '[]');
+  const people = JSON.parse(values[employeeKey] || '[]');
+  const restoredOrders = JSON.parse(values[orderKey] || '[]');
+  const arrays = [restoredTasks,people,restoredOrders];
+  if (arrays.some(array => !Array.isArray(array) || new Set(array.map(item=>item?.id)).size !== array.length)) throw new Error('Ugyldig liste i sikkerhedskopien.');
+  const optionalText = (item,keys) => keys.every(key => item[key] === undefined || typeof item[key] === 'string');
+  const timestamp = value => Number.isFinite(value) && value >= 0;
+  for (const task of restoredTasks) {
+    if (!task || typeof task.id !== 'string' || typeof task.title !== 'string' ||
+      !Array.isArray(task.sessions) || task.sessions.some(period=> !period || !timestamp(period.start) ||
+        !timestamp(period.end) || period.end < period.start) ||
+      !(task.startedAt === null || timestamp(task.startedAt)) ||
+      !(task.completedAt === null || timestamp(task.completedAt)) ||
+      task.createdAt != null && !timestamp(task.createdAt) ||
+      task.dailyCorrections !== undefined && (!Array.isArray(task.dailyCorrections) ||
+        task.dailyCorrections.some(item=>!item || !validDate(item.day) || !item.day ||
+          !Number.isFinite(item.delta) || !timestamp(item.correctedAt))) ||
+      !optionalText(task,['note','category','workState','waitingFor']) ||
+      task.followUp !== undefined && !validDate(task.followUp) ||
+      task.deadline !== undefined && !validDate(task.deadline) ||
+      task.repeat !== undefined && !['','weekly','monthly','yearly'].includes(task.repeat) ||
+      !optionalText(task,['repeatNextId','repeatFromId']) ||
+      task.checklist !== undefined && (!Array.isArray(task.checklist) ||
+        task.checklist.some(step=>!step || typeof step.id !== 'string' || typeof step.text !== 'string' || typeof step.done !== 'boolean')) ||
+      task.previousCompletions !== undefined && (!Array.isArray(task.previousCompletions) || !task.previousCompletions.every(timestamp))) {
+      throw new Error('Ugyldige opgavedata.');
+    }
+  }
+  for (const person of people) {
+    if (!person || !['id','name','department','amr'].every(key=>typeof person[key] === 'string') ||
+      typeof person.video !== 'boolean' || typeof person.tour !== 'boolean') throw new Error('Ugyldige medarbejderdata.');
+  }
+  for (const order of restoredOrders) {
+    if (!order || !['id','person','item'].every(key=>typeof order[key] === 'string') ||
+      !validDate(order.ordered) || !optionalText(order,['note']) ||
+      order.expected !== undefined && !validDate(order.expected) ||
+      !(order.deliveredAt === null || validDate(order.deliveredAt))) throw new Error('Ugyldige bestillinger.');
+  }
+  const file = backup.attachment;
+  if (file && (typeof file.name !== 'string' || !/\.(xlsx|xls|xlsm|xlsb)$/i.test(file.name) ||
+      typeof file.base64 !== 'string' || !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(file.base64))) {
+    throw new Error('Ugyldig Excel-vedhæftning.');
+  }
+  values[taskKey] = JSON.stringify(restoredTasks.map(task=>stopTask(task,backup.exportedAt)));
+  return {tasks:restoredTasks.length,people:people.length,orders:restoredOrders.length};
+}
+$('backup-file').addEventListener('change',async () => {
+  const file = $('backup-file').files[0];
+  $('backup-file').value = '';
+  pendingBackup = null;
+  $('backup-restore').hidden = true;
+  if (!file) return;
+  try {
+    let backup = JSON.parse(await file.text());
+    if (backup.format==='sikkerhedsoverblik-local') {
+      validateFolderDocument(backup);
+      backup=backup.payload;
+    }
+    const counts = validateBackup(backup);
+    pendingBackup = backup;
+    report('backup-feedback','Kopien indeholder '+counts.tasks+' opgaver, '+counts.people+' medarbejdere og '+counts.orders+
+      ' bestillinger'+(backup.attachment ? ' samt en Excel-fil.' : '.')+' Gendannelse erstatter oplysningerne i denne browser.');
+    $('backup-restore').hidden = false;
+  } catch (error) { report('backup-feedback',error.message,true); }
+});
+async function replaceAttachment(file) {
+  const db = await openFileStore();
+  try {
+    await new Promise((resolve,reject) => {
+      const transaction = db.transaction('vedhaeftninger','readwrite');
+      const store = transaction.objectStore('vedhaeftninger');
+      if (file) store.put(file,'stigeoversigt');
+      else store.delete('stigeoversigt');
+      transaction.oncomplete = resolve;
+      transaction.onabort = transaction.onerror = () => reject(transaction.error || new Error('Excel-filen kunne ikke gendannes.'));
+    });
+  } finally { db.close(); }
+}
+function decodeAttachment(attachment) {
+  if (!attachment) return null;
+  const bytes = Uint8Array.from(atob(attachment.base64),character=>character.charCodeAt(0));
+  return {name:attachment.name,blob:new Blob([bytes],{type:attachment.type || 'application/octet-stream'})};
+}
+$('backup-restore').addEventListener('click',async () => {
+  if (!pendingBackup || busy) return;
+  const button = $('backup-restore');
+  button.disabled = true;
+  let previousValues;
+  let previousFile;
+  let attachmentChanged = false;
+  try {
+    validateBackup(pendingBackup);
+    const attachment = decodeAttachment(pendingBackup.attachment);
+    previousValues = Object.fromEntries(backupKeys.map(key=>[key,localStorage.getItem(key)]));
+    previousFile = await fileStore();
+    await replaceAttachment(attachment);
+    attachmentChanged = true;
+    for (const key of backupKeys) {
+      const value = pendingBackup.values[key];
+      if (value === null) localStorage.removeItem(key);
+      else writeLocalValue(key,value);
+    }
+    pendingBackup = null;
+    if (folderEnabled && folderHandle) {
+      markFolderChanged();
+      await flushFolder();
+    }
+    location.reload();
+  } catch (error) {
+    let rollbackError = false;
+    if (previousValues && attachmentChanged) {
+      try {
+        for (const key of backupKeys) localStorage.removeItem(key);
+        for (const key of backupKeys) {
+          if (previousValues[key] !== null) writeLocalValue(key,previousValues[key]);
+        }
+        await replaceAttachment(previousFile);
+      } catch { rollbackError = true; }
+    }
+    report('backup-feedback',rollbackError ? 'Gendannelsen blev afbrudt, og nogle data kunne ikke rulles tilbage. Behold sikkerhedskopien og genindlæs siden.' :
+      'Gendannelsen blev afbrudt. '+error.message,true);
+  } finally { button.disabled = false; }
+});
+renderAttention();
+renderTasks();
+
+
+function taskMatchesSearch(task, query) {
+  const haystack = [task.title,task.note,task.waitingFor,task.category,
+    ...(task.checklist || []).map(item=>item.text)].filter(Boolean).join(' ').toLocaleLowerCase('da');
+  return haystack.includes(query.trim().toLocaleLowerCase('da'));
+}
+function taskDeadlineLabel(task) {
+  if (!task.deadline) return '';
+  return 'Frist ' + orderDateLabel(task.deadline) +
+    (task.completedAt === null && task.deadline < todayOrderDate() ? ' · Overskredet' : '');
+}
+function nextRepeatDate(value, repeat) {
+  const date = new Date(value+'T12:00:00');
+  if (repeat === 'weekly') date.setDate(date.getDate()+7);
+  else {
+    const targetMonth = date.getMonth() + (repeat === 'monthly' ? 1 : 12);
+    const targetDay = date.getDate();
+    date.setDate(1);
+    date.setMonth(targetMonth);
+    const last = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
+    date.setDate(Math.min(targetDay,last));
+  }
+  return inputDay(date.getTime());
+}
+function completeTasks(current, id, now) {
+  const task = current.find(item=>item.id===id);
+  if (!task || task.completedAt !== null) return current;
+  let nextId = task.repeatNextId;
+  const updated = current.map(item=>item.id===id
+    ? {...stopTask(item,now),completedAt:now,topOfMind:false}
+    : item);
+  if (['weekly','monthly','yearly'].includes(task.repeat) && !nextId) {
+    nextId = crypto.randomUUID();
+    updated.push({
+      id:nextId,title:task.title,category:taskCategory(task),workState:'open',createdAt:now,
+      startedAt:null,completedAt:null,sessions:[],repeat:task.repeat,
+      deadline:nextRepeatDate(task.deadline || inputDay(now),task.repeat),
+      checklist:(task.checklist||[]).map(item=>({id:crypto.randomUUID(),text:item.text,done:false})),
+      note:task.note || '',repeatFromId:task.id
+    });
+    updated.find(item=>item.id===id).repeatNextId=nextId;
+  }
+  return updated;
+}
+function renderChecklist(task) {
+  const list=$('task-checklist');
+  list.replaceChildren();
+  for (const item of task.checklist || []) {
+    const row=document.createElement('div');
+    row.className='checklist-row';
+    const label=document.createElement('label');
+    const checkbox=document.createElement('input');
+    checkbox.type='checkbox';
+    checkbox.checked=item.done;
+    checkbox.addEventListener('change',()=>{
+      const saved=saveTaskChange(current=>current.map(record=>record.id===task.id ?
+        {...record,checklist:(record.checklist||[]).map(step=>step.id===item.id ? {...step,done:checkbox.checked} : step)} : record));
+      if (!saved) checkbox.checked=!checkbox.checked;
+      else report('task-edit-feedback','Tjeklisten er gemt.');
+    });
+    const text=document.createElement('span');
+    text.textContent=item.text;
+    label.append(checkbox,text);
+    const remove=taskButton('Fjern',()=>{
+      if (!saveTaskChange(current=>current.map(record=>record.id===task.id ?
+        {...record,checklist:(record.checklist||[]).filter(step=>step.id!==item.id)} : record))) return;
+      renderChecklist(tasks.find(record=>record.id===task.id));
+    });
+    row.append(label,remove);
+    list.append(row);
+  }
+}
+$('checklist-add').addEventListener('click',()=>{
+  const text=$('checklist-text').value.trim();
+  if (!text || !editedTaskId) return;
+  if (!saveTaskChange(current=>current.map(task=>task.id===editedTaskId ?
+    {...task,checklist:[...(task.checklist||[]),{id:crypto.randomUUID(),text,done:false}]} : task))) return;
+  $('checklist-text').value='';
+  renderChecklist(tasks.find(task=>task.id===editedTaskId));
+});
+$('open-task-search').addEventListener('input',()=>renderOpenTasks(tasks.filter(task=>task.completedAt===null)));
+$('history-task-search').addEventListener('input',renderTaskHistory);
+function renderDayEnd() {
+  const day=localTaskDate(todayOrderDate());
+  const end=nextMidnight(day);
+  $('day-end-list').replaceChildren();
+  let total=0;
+  for (const task of tasks) {
+    const time=taskDays(task,Date.now()).find(([date])=>date===day)?.[1] || 0;
+    total+=time;
+    if (!time && !(task.completedAt>=day && task.completedAt<end)) continue;
+    const row=document.createElement('li');
+    row.textContent=task.title+' · '+taskDuration(time)+' · '+taskStateLabel(task);
+    $('day-end-list').append(row);
+  }
+  $('day-end-total').textContent='I dag · '+taskDuration(total);
+  const open=tasks.filter(task=>task.completedAt===null);
+  $('day-end-open').replaceChildren();
+  for (const task of open) {
+    const row=document.createElement('li');
+    row.append(taskButton(task.title,()=>taskEditorOpen(task.id)));
+    const text=document.createElement('span');
+    text.textContent=' · '+taskStateLabel(task)+(task.note ? ' · '+task.note : ' · Tilføj noter om næste skridt');
+    row.append(text);
+    $('day-end-open').append(row);
+  }
+  const running=tasks.find(task=>task.startedAt!==null);
+  $('day-end-stop').hidden=!running;
+  $('day-end-running').textContent=running ? 'Aktiv timer · '+running.title : 'Alle timere er stoppet.';
+  $('day-end-empty').hidden=$('day-end-list').children.length>0;
+}
+$('show-day-end').addEventListener('click',()=>{
+  $('home').hidden=true;
+  $('day-end').hidden=false;
+  renderDayEnd();
+  $('day-end-title').focus();
+});
+$('close-day-end').addEventListener('click',()=>{
+  $('day-end').hidden=true;$('home').hidden=false;renderTasks();$('show-day-end').focus();
+});
+$('day-end-stop').addEventListener('click',()=>{
+  if (!saveTaskChange((current,now)=>current.map(task=>stopTask(task,now)))) return;
+  renderTasks();
+  renderDayEnd();
+});
+
+
+// All folder operations are local file-system operations.
+var folderEnabled = true;
+var folderSuspended = false;
+let folderHandle = null;
+let stagedFolder = null;
+let folderTimer = null;
+let folderSaving = null;
+let folderVersion = 0;
+let folderSavedVersion = 0;
+let folderExpectedRevision = null;
+let folderHasChanges = localStorage.getItem('sikkerhedsoverblik-folder-dirty') === 'true';
+const folderFileName = 'Sikkerhedsoverblik_data.json';
+const folderMetaKey = 'sikkerhedsoverblik-folder-meta';
+function writeLocalValue(key,value) {
+  localStorage.setItem(key,value);
+  if (folderEnabled && !folderSuspended && backupKeys.includes(key)) markFolderChanged();
+}
+function folderMessage(text,error=false) {
+  $('folder-status').textContent=text;
+  $('folder-status').classList.toggle('error',error);
+}
+function markFolderChanged() {
+  folderVersion++;
+  folderHasChanges=true;
+  localStorage.setItem('sikkerhedsoverblik-folder-dirty','true');
+  if (!folderHandle) {
+    $('folder-badge').textContent='Kun gemt i browser';
+    return;
+  }
+  $('folder-badge').textContent='Mangler at blive gemt';
+  folderMessage('Ændringer gemmes i '+folderHandle.name+' …');
+  clearTimeout(folderTimer);
+  folderTimer=setTimeout(()=>flushFolder().catch(()=>{}),800);
+}
+async function folderHandleStore(handle, write=false) {
+  const db=await openFileStore();
+  try {
+    return await new Promise((resolve,reject)=>{
+      const tx=db.transaction('vedhaeftninger',write?'readwrite':'readonly');
+      const store=tx.objectStore('vedhaeftninger');
+      const request=write ? (handle ? store.put(handle,'datamappe') : store.delete('datamappe')) : store.get('datamappe');
+      tx.oncomplete=()=>resolve(request.result);
+      tx.onerror=tx.onabort=()=>reject(tx.error);
+    });
+  } finally { db.close(); }
+}
+function validateFolderDocument(document) {
+  if (!document || document.format!=='sikkerhedsoverblik-local' || document.version!==1 ||
+    typeof document.revision!=='string' || !document.payload) throw new Error('Datafilen har et ukendt format.');
+  const copy=JSON.parse(JSON.stringify(document.payload));
+  return validateBackup(copy);
+}
+async function readFolderDocument(handle) {
+  try {
+    const file=await handle.getFileHandle(folderFileName);
+    const text=await (await file.getFile()).text();
+    const document=JSON.parse(text);
+    validateFolderDocument(document);
+    return document;
+  } catch(error) {
+    if (error.name==='NotFoundError') return null;
+    throw error;
+  }
+}
+async function writeFolderFile(handle,name,text) {
+  const file=await handle.getFileHandle(name,{create:true});
+  const writable=await file.createWritable();
+  try { await writable.write(text);await writable.close(); }
+  catch(error) { try { await writable.abort(); } catch {} throw error; }
+}
+async function folderPayload() {
+  if (busy) throw new Error('Excel-filen gemmes stadig. Tryk Gem nu om et øjeblik.');
+  return {format:'sikkerhedsoverblik',version:1,exportedAt:Date.now(),
+    values:Object.fromEntries(backupKeys.map(key=>[key,localStorage.getItem(key)])),
+    attachment:await backupAttachment()};
+}
+async function saveFolderLoop() {
+  while (folderHandle && folderSavedVersion < folderVersion) {
+    const handle=folderHandle;
+    const version=folderVersion;
+    if (await handle.queryPermission({mode:'readwrite'})!=='granted') {
+      $('folder-reconnect').hidden=false;
+      throw new Error('Adgangen til mappen skal bekræftes igen. Ændringer er foreløbig gemt i browseren.');
+    }
+    const previous=await readFolderDocument(handle);
+    if ((previous?.revision || null)!==folderExpectedRevision) {
+      throw new Error('Datafilen er ændret uden for denne fane. Vælg mappen igen for at indlæse den. Din arbejdskopi er bevaret i browseren.');
+    }
+    const payload=await folderPayload();
+    if (handle!==folderHandle) throw new Error('Datamappen er skiftet under lagringen.');
+    const document={format:'sikkerhedsoverblik-local',version:1,revision:crypto.randomUUID(),savedAt:Date.now(),payload};
+    validateFolderDocument(document);
+    if (previous) {
+      await writeFolderFile(handle,'Sikkerhedsoverblik_forrige.json',JSON.stringify(previous));
+      const stamp=todayOrderDate();
+      const dailyName='Sikkerhedsoverblik_backup_'+stamp+'.json';
+      try { await handle.getFileHandle(dailyName); }
+      catch(error) {
+        if (error.name!=='NotFoundError') throw error;
+        await writeFolderFile(handle,dailyName,JSON.stringify(previous));
+      }
+    }
+    await writeFolderFile(handle,folderFileName,JSON.stringify(document));
+    folderExpectedRevision=document.revision;
+    folderSavedVersion=version;
+    localStorage.setItem(folderMetaKey,JSON.stringify({revision:document.revision,name:handle.name}));
+    if (folderSavedVersion===folderVersion) {
+      folderHasChanges=false;
+      localStorage.setItem('sikkerhedsoverblik-folder-dirty','false');
+      $('folder-badge').textContent='Gemt på pc';
+      folderMessage('Gemt i '+handle.name+' · '+new Date(document.savedAt).toLocaleTimeString('da-DK'));
+    }
+  }
+}
+async function flushFolder() {
+  clearTimeout(folderTimer);
+  if (folderSaving) return folderSaving;
+  if (!folderHandle || folderSuspended) return;
+  const save=()=>saveFolderLoop();
+  folderSaving=(window.navigator?.locks
+    ? window.navigator.locks.request('sikkerhedsoverblik-local-write',save)
+    : save()).catch(error=>{
+    $('folder-badge').textContent='Ikke gemt i mappe';
+    folderMessage(error.message,true);
+    throw error;
+  }).finally(()=>{folderSaving=null;});
+  return folderSaving;
+}
+function showConnectedFolder() {
+  $('folder-save').disabled=false;
+  $('folder-disconnect').hidden=false;
+  $('folder-existing').hidden=true;
+  $('folder-reconnect').hidden=true;
+}
+async function connectNewFolder(handle) {
+  await folderHandleStore(handle,true);
+  folderHandle=handle;
+  folderExpectedRevision=null;
+  folderSavedVersion=folderVersion;
+  stagedFolder=null;
+  showConnectedFolder();
+  markFolderChanged();
+  await flushFolder();
+}
+async function inspectFolder(handle, allowCached=false) {
+  const document=await readFolderDocument(handle);
+  if (!document) { await connectNewFolder(handle);return; }
+  const meta=JSON.parse(localStorage.getItem(folderMetaKey)||'null');
+  const cacheMatches=backupKeys.every(key=>localStorage.getItem(key)===document.payload.values[key]);
+  let attachmentMatches=true;
+  if (allowCached) {
+    const cachedFile=await fileStore();
+    const savedAttachment=document.payload.attachment;
+    attachmentMatches=savedAttachment
+      ? Boolean(cachedFile && cachedFile.name===savedAttachment.name &&
+          cachedFile.blob.size===atob(savedAttachment.base64).length)
+      : !cachedFile;
+  }
+  if (allowCached && !folderHasChanges && cacheMatches && attachmentMatches && meta?.revision===document.revision) {
+    folderHandle=handle;
+    folderExpectedRevision=document.revision;
+    folderSavedVersion=folderVersion;
+    showConnectedFolder();
+    $('folder-badge').textContent='Gemt på pc';
+    folderMessage('Forbundet til '+handle.name+'. Oplysningerne er gemt lokalt.');
+    return;
+  }
+  const counts=validateFolderDocument(document);
+  stagedFolder={handle,document};
+  $('folder-existing').hidden=false;
+  $('folder-existing-info').textContent=handle.name+' indeholder '+counts.tasks+' opgaver, '+counts.people+
+    ' medarbejdere og '+counts.orders+' bestillinger. Senest gemt '+new Date(document.savedAt).toLocaleString('da-DK')+'.';
+  $('folder-badge').textContent='Afventer indlæsning';
+  folderMessage('Der er allerede oplysninger i mappen. Vælg Indlæs eller Annullér.');
+}
+$('folder-pick').addEventListener('click',async ()=>{
+  try {
+    if (folderSaving) {folderMessage('Vent til den igangværende lagring er færdig.');return;}
+    const handle=await window.showDirectoryPicker({id:'sikkerhedsoverblik-data',mode:'readwrite'});
+    if (folderHandle) {folderMessage('Afbryd den nuværende mappe, før du vælger en anden.',true);return;}
+    await inspectFolder(handle);
+  } catch(error) {
+    if (error.name!=='AbortError') folderMessage('Mappen kunne ikke åbnes. '+error.message,true);
+  }
+});
+$('folder-save').addEventListener('click',async ()=>{
+  markFolderChanged();
+  try {await flushFolder();} catch {}
+});
+$('folder-cancel').addEventListener('click',()=>{
+  stagedFolder=null;
+  $('folder-existing').hidden=true;
+  $('folder-badge').textContent='Ingen mappe valgt';
+  folderMessage('Mappevalg annulleret. Oplysningerne er i browserens lokale arbejdskopi.');
+});
+$('folder-disconnect').addEventListener('click',async ()=>{
+  if (folderSaving) {folderMessage('Vent til lagringen er færdig.');return;}
+  try {
+    clearTimeout(folderTimer);
+    await folderHandleStore(null,true);
+    folderHandle=null;
+    stagedFolder=null;
+    $('folder-save').disabled=true;
+    $('folder-disconnect').hidden=true;
+    $('folder-badge').textContent='Ingen mappe valgt';
+    folderMessage('Mappeforbindelsen er afbrudt. Dine filer ligger fortsat i mappen.');
+  } catch(error) {folderMessage(error.message,true);}
+});
+$('folder-reconnect').addEventListener('click',async ()=>{
+  try {
+    const handle=folderHandle || await folderHandleStore();
+    if (!handle) return;
+    const permission=await handle.requestPermission({mode:'readwrite'});
+    if (permission!=='granted') {folderMessage('Der blev ikke givet adgang. Arbejdskopien er i browseren.',true);return;}
+    if (folderHandle) {await flushFolder();$('folder-reconnect').hidden=true;}
+    else await inspectFolder(handle,true);
+  } catch(error) {folderMessage(error.message,true);}
+});
+$('folder-load').addEventListener('click',async ()=>{
+  if (!stagedFolder || folderSaving || busy) return;
+  $('folder-load').disabled=true;
+  let previousValues,previousFile;
+  let fileChanged=false;
+  folderSuspended=true;
+  try {
+    const {handle,document:staged}=stagedFolder;
+    const latest=await readFolderDocument(handle);
+    if (!latest || latest.revision!==staged.revision) throw new Error('Filen er ændret. Vælg mappen igen.');
+    validateFolderDocument(latest);
+    const attachment=decodeAttachment(latest.payload.attachment);
+    previousValues=Object.fromEntries(backupKeys.map(key=>[key,localStorage.getItem(key)]));
+    previousFile=await fileStore();
+    await replaceAttachment(attachment);
+    fileChanged=true;
+    for (const key of backupKeys) {
+      const value=latest.payload.values[key];
+      if (value===null) localStorage.removeItem(key);
+      else localStorage.setItem(key,value);
+    }
+    await folderHandleStore(handle,true);
+    localStorage.setItem(folderMetaKey,JSON.stringify({revision:latest.revision,name:handle.name}));
+    localStorage.setItem('sikkerhedsoverblik-folder-dirty','false');
+    location.reload();
+  } catch(error) {
+    let failed=false;
+    if (fileChanged) {
+      try {
+        for (const key of backupKeys) localStorage.removeItem(key);
+        for (const key of backupKeys) if (previousValues[key]!==null) localStorage.setItem(key,previousValues[key]);
+        await replaceAttachment(previousFile);
+      } catch {failed=true;}
+    }
+    folderMessage(failed ? 'Indlæsning afbrudt. Nogle data kunne ikke gendannes i browseren. Brug din sikkerhedskopi.' :
+      'Indlæsning afbrudt. '+error.message,true);
+  } finally {
+    folderSuspended=false;
+    $('folder-load').disabled=false;
+  }
+});
+window.addEventListener('beforeunload',event=>{
+  if (folderHandle && (folderHasChanges || folderSaving)) {
+    event.preventDefault();
+    event.returnValue='';
+  }
+});
+window.addEventListener('storage',event=>{
+  if (backupKeys.includes(event.key)) markFolderChanged();
+});
+async function startLocalFolder() {
+  if (!window.showDirectoryPicker) {
+    $('folder-pick').disabled=true;
+    $('folder-badge').textContent='Mappevalg er ikke tilgængeligt';
+    folderMessage('Åbn programmet i Edge eller Chrome. Browseren skal tillade lokal filadgang. Indtil da gemmes data i browseren.',true);
+    return;
+  }
+  try {
+    const handle=await folderHandleStore();
+    if (!handle) return;
+    if (await handle.queryPermission({mode:'readwrite'})==='granted') await inspectFolder(handle,true);
+    else {
+      $('folder-reconnect').hidden=false;
+      $('folder-badge').textContent='Adgang mangler';
+      folderMessage('Tryk Giv adgang igen for at forbinde den tidligere datamappe.');
+    }
+  } catch(error) {folderMessage('Datamappen kunne ikke forbindes. '+error.message,true);}
+}
+startLocalFolder();
+
+</script>
+</body>
+</html>
